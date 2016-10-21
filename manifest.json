@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+
+    "name": "Password Manager",
+    "description": "This extension connects to your password manager and inserts passwords and usernames into input fields.",
+    "version": "1.0",
+
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+            "scripts": ["context.js"]
+              },
+    "permissions": [
+        "activeTab",
+        "https://ajax.googleapis.com/",
+        "contextMenus"
+    ]
+}
