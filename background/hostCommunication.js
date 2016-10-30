@@ -146,14 +146,19 @@ function getAccountForDomain(domain) {
 function getAccountsForDomain(domain) {
     doneAction();
     var result = [];
+    var markedActive = false;
     for (var item in accounts) {
-        if (accounts[item]["url"].length<5)
+        if (accounts[item]["url"].length < 5)
             continue;
         if (domain.indexOf(accounts[item]["url"]) >=0) {
             var account = accounts[item];
             account["active"] = item == activeAccountIndex;
+            markedActive = account["active"] || markedActive;
             result.push(account);
         }
+    }
+    if (!markedActive) {
+        result[0]["active"] = true;
     }
     return result;
 }
