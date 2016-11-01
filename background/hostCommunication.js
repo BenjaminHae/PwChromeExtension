@@ -125,19 +125,9 @@ function getPassword(account) {
 }
 
 function getAccountForDomain(domain) {
-    doneAction();
-    if (activeAccountIndex != null) {
-        if (activeAccountIndex in accounts) {
-            if (domain.indexOf(activeAccountUrl) >= 0)
-                return accounts[activeAccountIndex];
-        }
-        activeAccountIndex = null;
-        activeAccountUrl = null;
-    }
-    for (var item in accounts) {
-        if (accounts[item]["url"].length<5)
-            continue;
-        if (domain.indexOf(accounts[item]["url"]) >=0)
+    var applicableAccounts = getAccountsForDomain(domain);
+    for (var item in applicableAccounts) {
+        if (applicableAccounts[item]["active"] == true)
             return accounts[item];
     }
     return null;
