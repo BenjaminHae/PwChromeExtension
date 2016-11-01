@@ -10,9 +10,9 @@ var confkey;
 var username;
 
 var activeAccountIndex;
-var activeAccountUrl;
+var activeAccountUrl;//ToDo remove
 
-var lastAction; //ToDo
+var lastAction;
 const inactiveTimeout = 10 * 60 * 1000;
 
 function timeOut() {
