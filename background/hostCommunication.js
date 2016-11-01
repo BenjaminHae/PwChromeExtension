@@ -128,7 +128,7 @@ function getAccountForDomain(domain) {
     var applicableAccounts = getAccountsForDomain(domain);
     for (var item in applicableAccounts) {
         if (applicableAccounts[item]["active"] == true)
-            return accounts[item];
+            return applicableAccounts[item];
     }
     return null;
 }
