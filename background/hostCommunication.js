@@ -164,8 +164,11 @@ function getAccountsForDomain(domain) {
             result.push(account);
         }
     }
-    if (!markedActive) {
-        result[bestFitIndex]["active"] = true;
+    if (!markedActive ) {
+        activeAccountIndex = null;
+        activeAccountUrl = null;
+        if (bestFitIndex >= 0)
+            result[bestFitIndex]["active"] = true;
     }
     return result;
 }
