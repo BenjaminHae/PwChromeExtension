@@ -61,13 +61,19 @@ function showLoggedIn(loggedIn) {
 
 function showAvailableAccounts(accounts,url) {
     var ul = document.getElementById('accounts_ul');
+    while (ul.firstChild) {
+        ul.removeChild(ul.firstChild);
+    }
     for (item in accounts) {
         var account = accounts[item];
         var a = document.createElement("a");
         a.innerHTML = account["name"]+" ("+account["username"]+")";
         a.index = account["index"];
         a.url = url;
-        a.onclick = function(e){ sendBackgroundRequest("setAccount",{"index":this.index, "url":this.url});}; 
+        a.onclick = function(e){ 
+            sendBackgroundRequest("setAccount",{"index":this.index, "url":this.url});
+            sendBackgroundRequest("AvailableAccounts",{'url':this.url});
+        }; 
         var li = document.createElement("li");
         if (account["active"])
             li.setAttribute("class", "active");
