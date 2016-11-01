@@ -147,18 +147,25 @@ function getAccountsForDomain(domain) {
     doneAction();
     var result = [];
     var markedActive = false;
+    var bestFitIndex = -1;
+    var bestFitLength = 0;
     for (var item in accounts) {
-        if (accounts[item]["url"].length < 5)
+        var url = accounts[item]["url"];
+        if (url.length < 5)
             continue;
-        if (domain.indexOf(accounts[item]["url"]) >=0) {
+        if (domain.indexOf(url) >= 0) {
             var account = accounts[item];
             account["active"] = item == activeAccountIndex;
             markedActive = account["active"] || markedActive;
+            if (url.length > bestFitLength) {
+                bestFitLength = url.length;
+                bestFitIndex = result.length;
+            }
             result.push(account);
         }
     }
     if (!markedActive) {
-        result[0]["active"] = true;
+        result[bestFitIndex]["active"] = true;
     }
     return result;
 }
