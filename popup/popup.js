@@ -51,14 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function showLoggedIn(loggedIn) {
     var text;
-    var cls;
+    var cls="btn";
     if (loggedIn["status"]) {
         text = "Logout (" + loggedIn["username"]+")";
-        cls = "btn-danger";
+        cls += " btn-danger";
     }
     else {
         text = 'Login';
-        cls = "btn-success";
+        cls += " btn-success";
     }
     button = document.getElementById('logInButton');
     button.innerHTML = text;
