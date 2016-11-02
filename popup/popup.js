@@ -52,15 +52,17 @@ document.addEventListener('DOMContentLoaded', function() {
 function showLoggedIn(loggedIn) {
     var text;
     var cls="btn";
+    button = document.getElementById('logInButton');
     if (loggedIn["status"]) {
-        text = "Logout (" + loggedIn["username"]+")";
+        var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
+        button.insertBefore(textnode, button);
+        text = "Logout";
         cls += " btn-danger";
     }
     else {
         text = 'Login';
         cls += " btn-success";
     }
-    button = document.getElementById('logInButton');
     button.innerHTML = text;
     button.setAttribute("class", cls);
 }
