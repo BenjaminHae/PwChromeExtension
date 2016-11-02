@@ -75,8 +75,9 @@ function showAvailableAccounts(accounts,url) {
             sendBackgroundRequest("AvailableAccounts",{'url':this.url});
         }; 
         var li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
         if (account["active"])
-            li.setAttribute("class", "active");
+            li.setAttribute("class", "active list-group-item");
         li.appendChild(a);
         ul.appendChild(li);
     }
