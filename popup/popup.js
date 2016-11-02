@@ -55,7 +55,7 @@ function showLoggedIn(loggedIn) {
     button = document.getElementById('logInButton');
     if (loggedIn["status"]) {
         var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
-        button.insertBefore(textnode, button);
+        document.getElementById("loggedIn").insertBefore(textnode, button);
         text = "Logout";
         cls += " btn-danger";
     }
