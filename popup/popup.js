@@ -51,11 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function showLoggedIn(loggedIn) {
     var text;
-    if (loggedIn["status"])
-        text = "logged in as " + loggedIn["username"];
-    else
-        text = '<a href="#">not logged in</a>';
-    document.getElementById('loggedIn').innerHTML = text;
+    var cls;
+    if (loggedIn["status"]) {
+        text = "Logout (" + loggedIn["username"]+")";
+        cls = "btn-danger";
+    }
+    else {
+        text = 'Login';
+        cls = "btn-success";
+    }
+    button = document.getElementById('logInButton');
+    button.innerHTML = text;
+    button.setAttribute("class", cls);
 }
 
 
