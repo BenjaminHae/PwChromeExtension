@@ -62,6 +62,7 @@ function showLoggedIn(loggedIn) {
     else {
         text = 'Login';
         cls += " btn-success";
+        document.getElementById('accounts').setAttribute("class", "hidden");
     }
     button.innerHTML = text;
     button.setAttribute("class", cls);
@@ -69,7 +70,7 @@ function showLoggedIn(loggedIn) {
 
 
 function showAvailableAccounts(accounts,url) {
-    var ul = document.getElementById('accounts');
+    var ul = document.getElementById('accounts-list');
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
     }
@@ -87,6 +88,13 @@ function showAvailableAccounts(accounts,url) {
         if (account["active"])
             a.setAttribute("class", "list-group-item active");
         ul.appendChild(a);
+    }
+    if (accounts.length == 0){
+        var a = document.createElement("a");
+        a.innerHTML = "No accounts found";
+        a.setAttribute("class", "list-group-item disabled");
+        ul.appendChild(a);
+
     }
 }
 
