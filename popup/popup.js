@@ -69,7 +69,7 @@ function showLoggedIn(loggedIn) {
 
 
 function showAvailableAccounts(accounts,url) {
-    var ul = document.getElementById('accounts_ul');
+    var ul = document.getElementById('accounts');
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
     }
@@ -83,12 +83,10 @@ function showAvailableAccounts(accounts,url) {
             sendBackgroundRequest("setAccount",{"index":this.index, "url":this.url});
             sendBackgroundRequest("AvailableAccounts",{'url':this.url});
         }; 
-        var li = document.createElement("li");
-        li.setAttribute("class", "list-group-item");
+        a.setAttribute("class", "list-group-item");
         if (account["active"])
-            li.setAttribute("class", "active list-group-item");
-        li.appendChild(a);
-        ul.appendChild(li);
+            a.setAttribute("class", "list-group-item active");
+        ul.appendChild(a);
     }
 }
 
