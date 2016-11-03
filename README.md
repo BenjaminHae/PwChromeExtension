@@ -9,7 +9,7 @@ Preparation
 
 You need to replace https://%HOST%/ with the address of your own instance of the password manager.
 
-    find ./ -type f -exec sed -i -e 's#https://%HOST%/#www.yourhost.de#g' {}\;
+    find ./ -type f -exec sed -i -e 's#%HOST%#www.yourhost.de#g' {}\;
 
 The code of the password manager must be changed. In the file "src/password.php" add to the end of the function "dataReady"
 
