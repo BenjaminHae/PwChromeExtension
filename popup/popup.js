@@ -89,7 +89,7 @@ function showAvailableAccounts(accounts,url) {
         a.setAttribute("class", "list-group-item");
         if (account["active"])
             a.setAttribute("class", "list-group-item active");
-        a.appendChild(editIcon);
+        a.appendChild(editIcon.cloneNode(true));
         ul.appendChild(a);
     }
     if (accounts.length == 0){
