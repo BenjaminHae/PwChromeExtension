@@ -71,13 +71,15 @@ function showLoggedIn(loggedIn) {
 
 function showAvailableAccounts(accounts,url) {
     var ul = document.getElementById('accounts-list');
+    var editIcon = document.createElement("span");
+    editIcon.setAttribute("class", "pull-right glyphicon glyphicon-pencil");
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
     }
     for (item in accounts) {
         var account = accounts[item];
         var a = document.createElement("a");
-        a.innerHTML = account["name"]+" ("+account["username"]+")";
+        a.innerHTML = account["name"]+" ("+account["username"]+')';
         a.index = account["index"];
         a.url = url;
         a.onclick = function(e){ 
@@ -87,6 +89,7 @@ function showAvailableAccounts(accounts,url) {
         a.setAttribute("class", "list-group-item");
         if (account["active"])
             a.setAttribute("class", "list-group-item active");
+        a.appendChild(editIcon);
         ul.appendChild(a);
     }
     if (accounts.length == 0){
