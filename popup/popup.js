@@ -71,7 +71,7 @@ function showLoggedIn(loggedIn) {
 
 function showAvailableAccounts(accounts,url) {
     var ul = document.getElementById('accounts-list');
-    var add = document.getElementById('newAccount');
+    var add = ul.getElementById('newAccount');
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
     }
@@ -88,14 +88,19 @@ function showAvailableAccounts(accounts,url) {
         a.setAttribute("class", "list-group-item");
         if (account["active"])
             a.setAttribute("class", "list-group-item active");
-        ul.insertBefore(a, add);
+        ul.appendChild(a, add);
     }
     if (accounts.length == 0){
         var a = document.createElement("a");
         a.innerHTML = "No accounts found";
         a.setAttribute("class", "list-group-item disabled");
-        ul.insertBefore(a, add);
+        ul.appendChild(a, add);
     }
+    var a = document.createElement("a");
+    a.innterHTML = '<i class="glyphicon glyphicon-plus"></i><strong>Add Account</strong>';
+    a.onclick = function(e){alert("We should handle this");};
+    a.setAttribute("class", "list-group-item list-group-item-success");
+    ul.appendChild(a);
 }
 
 function clickLogin() {
