@@ -71,6 +71,7 @@ function showLoggedIn(loggedIn) {
 
 function showAvailableAccounts(accounts,url) {
     var ul = document.getElementById('accounts-list');
+    var add = document.getElementById('newAccount');
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
     }
@@ -87,14 +88,13 @@ function showAvailableAccounts(accounts,url) {
         a.setAttribute("class", "list-group-item");
         if (account["active"])
             a.setAttribute("class", "list-group-item active");
-        ul.appendChild(a);
+        ul.insertBefore(a, add);
     }
     if (accounts.length == 0){
         var a = document.createElement("a");
         a.innerHTML = "No accounts found";
         a.setAttribute("class", "list-group-item disabled");
-        ul.appendChild(a);
-
+        ul.insertBefore(a, add);
     }
 }
 
