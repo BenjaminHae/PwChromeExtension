@@ -96,7 +96,7 @@ function showAvailableAccounts(accounts,url) {
         ul.appendChild(a);
     }
     var a = document.createElement("a");
-    a.innterHTML = '<i class="glyphicon glyphicon-plus"></i><strong>Add Account</strong>';
+    a.innerHTML = '<i class="glyphicon glyphicon-plus"></i><strong>Add Account</strong>';
     a.onclick = function(e){alert("We should handle this");};
     a.setAttribute("class", "list-group-item list-group-item-success");
     ul.appendChild(a);
