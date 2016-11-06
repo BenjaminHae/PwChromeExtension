@@ -23,6 +23,7 @@ function executeScript(script,args) {
 
 console.log(103);
 function getActions() {
+    console.log("ask for actions");
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
         console.log(response);
         var request = JSON.parse(response);
@@ -32,6 +33,7 @@ function getActions() {
                 executeScript(function(data){
                     sessionStorage.confusion_key = data["confKey"];
                 }, {'confKey', request["data"]["confKey"]});
+                getActions();
                 break;
             case "edit":
                 break;

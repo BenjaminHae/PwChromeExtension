@@ -42,7 +42,8 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     switch(myMessage["request"]){
         case "session": receiveUserSession(myMessage["data"]); break;
         case "logout":  cleanup(); break;
-        case "actions": var now = new Date();
+        case "actions": console.log("actions");
+                        var now = new Date();
                         const validity = 10 * 1000;//10s validity for actions
                         var action = actionQueue.shift();
                         while (action != null && action["date"] + validity <= now) {
