@@ -41,7 +41,7 @@ chrome.extension.onConnect.addListener(function(port) {
 
 function setAction(action, data){
     switch (action) {
-        case "login": data = {"confKey":confkey}; 
+        case "login": data = {"sk":secretkey, "confKey":confkey, "salt":salt2}; 
                       break;
     }
     actionQueue.push({"request":action, "data":data, "date":new Date()});

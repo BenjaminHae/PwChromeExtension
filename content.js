@@ -31,8 +31,8 @@ function getActions() {
             case "login":
                 //data contains secretkey. It must be set using executeScript
                 executeScript(function(data){
-                    sessionStorage.confusion_key = data["confKey"];
-                }, {'confKey': request["data"]["confKey"]});
+                    setpwdstore(data["sk"],data["confKey"],data["salt"]);
+                }, {'sk': request["data"]["sk"],'confKey': request["data"]["confKey"], "salt":request["data"]["salt"]});
                 getActions();
                 break;
             case "edit":
