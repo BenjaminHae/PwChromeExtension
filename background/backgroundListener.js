@@ -45,7 +45,7 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
         case "actions": var now = new Date();
                         const validity = 10 * 1000;//10s validity for actions
                         var action = actionQueue.shift();
-                        while (action != null) && (action["date"] + validity <= now) {
+                        while (action != null && action["date"] + validity <= now) {
                             action = actionQueue.shift();
                         }
                         if (action == null)
