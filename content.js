@@ -31,6 +31,8 @@ function getActions() {
             case "login":
                 //data contains secretkey. It must be set using executeScript
                 executeScript(function(data){
+                    console.log('logging in');
+                    console.log(data);
                     setpwdstore(data["sk"],data["confKey"],data["salt"]);
                 }, {'sk': request["data"]["sk"],'confKey': request["data"]["confKey"], "salt":request["data"]["salt"]});
                 getActions();
