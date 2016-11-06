@@ -32,9 +32,30 @@ chrome.extension.onConnect.addListener(function(port) {
             case "setAccount":
                 setActiveAccount(request["data"]["index"],request["data"]["url"]);
                 break;
+            case "setAction":
+                setAction(request["data"]["action"], request["data"]["data"]);
+                break;
         }
     });
 });
+
+function setAction(action, data){
+    switch (action) {
+        case "login": data = {"confKey":confkey}; 
+                      break;
+    }
+    actionQueue.push({"request":action, "data":data, "date":new Date()});
+}
+
+function getLatestAction() {
+    var now = new Date();
+    const validity = 10 * 1000;//10s validity for actions
+    var action = actionQueue.shift();
+    while (action != null && action["date"] + validity <= now) {
+        action = actionQueue.shift();
+    }
+    return action;
+}
 
 // listen to the injected code in content.js
 chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
@@ -43,12 +64,7 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
         case "session": receiveUserSession(myMessage["data"]); break;
         case "logout":  cleanup(); break;
         case "actions": console.log("actions");
-                        var now = new Date();
-                        const validity = 10 * 1000;//10s validity for actions
-                        var action = actionQueue.shift();
-                        while (action != null && action["date"] + validity <= now) {
-                            action = actionQueue.shift();
-                        }
+                        var action = getLatestAction();
                         if (action == null)
                             action = {"request": "none"};
                         sendResponse(action);

@@ -26,7 +26,7 @@ function getActions() {
     console.log("ask for actions");
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
         console.log(response);
-        var request = JSON.parse(response);
+        var request = response;//JSON.parse(response);
         switch(request["request"]){
             case "login":
                 //data contains secretkey. It must be set using executeScript
@@ -39,8 +39,7 @@ function getActions() {
                 break;
             case "addAccount":
                 break;
-            case "none":
-                break;
+            case "none": break;
         }
     });
 }

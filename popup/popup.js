@@ -17,11 +17,6 @@ function sendBackgroundRequest(request, data) {
     port.postMessage(JSON.stringify({'request':request, 'data':data}));
 }
 
-
-function renderStatus(statusText) {
-  document.getElementById('status').textContent = statusText;
-}
- 
 function getCurrentTabUrl(callback) {
     var queryInfo = {
         active: true,
@@ -44,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
       sendBackgroundRequest("AvailableAccounts",{'url':url});
   });
-  document.getElementById('loggedIn').addEventListener('click', clickLogin);
+//  document.getElementById('loggedIn').addEventListener('click', clickLogin);
 });
 
 /* Output section */
@@ -58,11 +53,19 @@ function showLoggedIn(loggedIn) {
         document.getElementById("loggedIn").appendChild(textnode, button);
         text = "Logout";
         cls += " btn-danger";
+        button.onclick = function(e) {
+            var actions = [];
+            actions.push({"action":"login", "data":null});
+            openWithAction(actions);
+        }
     }
     else {
         text = 'Login';
         cls += " btn-success";
         document.getElementById('accounts').setAttribute("class", "hidden");
+        button.onclick = function(e) {
+            clickLogin();
+        }
     }
     button.innerHTML = text;
     button.setAttribute("class", cls);
@@ -103,6 +106,15 @@ function showAvailableAccounts(accounts,url) {
     a.onclick = function(e){alert("We should handle this");};
     a.setAttribute("class", "list-group-item list-group-item-success");
     ul.appendChild(a);
+}
+
+function openWithAction(actions) {
+    var action = actions.shift();
+    while (action != null){
+        sendBackgroundRequest("setAction", action);
+        action = actions.shift();
+    }
+    chrome.tabs.create({url:"https://%HOST%/"});
 }
 
 function clickLogin() {
