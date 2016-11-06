@@ -32,7 +32,7 @@ function getActions() {
                 //data contains secretkey. It must be set using executeScript
                 executeScript(function(data){
                     sessionStorage.confusion_key = data["confKey"];
-                }, {'confKey', request["data"]["confKey"]});
+                }, {'confKey': request["data"]["confKey"]});
                 getActions();
                 break;
             case "edit":
