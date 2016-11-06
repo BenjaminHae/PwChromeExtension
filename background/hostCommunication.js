@@ -2,6 +2,7 @@ var host = "https://%HOST%/";
 var accounts;
 var data;
 var secretkey;
+var secretkey0;
 var default_letter_used;
 var default_length;
 var salt1;
@@ -75,7 +76,7 @@ function receiveUserSession(session) {
     doneAction();
     console.log("Received session");
     secretkeyNew = session["secretkey"];
-    //var secretkey0=getpwdstore(salt2);
+    secretkey0=session["secretkey0"];
     if (secretkeyNew != ""){
         secretkey = secretkeyNew;
         confkey = session["confkey"];
