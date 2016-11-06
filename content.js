@@ -22,18 +22,27 @@ function executeScript(script,args) {
 }
 
 console.log(103);
-chrome.runtime.sendMessage({"request":"actions"}, function(response) {
-    var request = JSON.parse(response);
-    switch(request["request"]){
-        case "login":
-            //data contains secretkey. It must be set using executeScript
-            break;
-        case "edit":
-            break;
-        case "addAccount":
-            break;
-    }
-});
+function getActions() {
+    chrome.runtime.sendMessage({"request":"actions"}, function(response) {
+        console.log(response);
+        var request = JSON.parse(response);
+        switch(request["request"]){
+            case "login":
+                //data contains secretkey. It must be set using executeScript
+                executeScript(function(data){
+                    sessionStorage.confusion_key = data["confKey"];
+                }, {'confKey', request["data"]["confKey"]});
+                break;
+            case "edit":
+                break;
+            case "addAccount":
+                break;
+            case "none":
+                break;
+        }
+    });
+}
+getActions();
 console.log(104);
 
 executeScript(function(){

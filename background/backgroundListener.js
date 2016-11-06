@@ -1,6 +1,8 @@
 // Listens to popup.js and into sites injected scripts and dispatches actions
 // context menu events are handled in context.js
 
+var actionQueue = [];
+
 // listen to popup.js
 chrome.extension.onConnect.addListener(function(port) {
     console.log("Connected .....");
@@ -40,6 +42,16 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     switch(myMessage["request"]){
         case "session": receiveUserSession(myMessage["data"]); break;
         case "logout":  cleanup(); break;
+        case "actions": var now = new Date();
+                        const validity = 10 * 1000;//10s validity for actions
+                        var action = actionQueue.shift();
+                        while (action != null) && (action["date"] + validity <= now) {
+                            action = actionQueue.shift();
+                        }
+                        if (action == null)
+                            action = {"request": "none"};
+                        sendResponse(action);
+                        break;
     }
     return true;
 });
