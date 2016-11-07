@@ -33,7 +33,8 @@ function getActions() {
                 executeScript(function(data){
                     console.log('logging in');
                     console.log(data);
-                    setpwdstore(data["sk"],data["confKey"],data["salt"]);
+                    var salt = data["salt"];
+                    setpwdstore(data["sk"],decryptchar(data["confKey"],salt),salt);
                 }, {'sk': request["data"]["sk"],'confKey': request["data"]["confKey"], "salt":request["data"]["salt"]});
                 getActions();
                 break;
@@ -57,7 +58,7 @@ executeScript(function(){
         console.log("105 - before");
         dataReadyOriginal(data);
         console.log("100 - after");
-        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': decryptchar(getconfkey(salt2),salt2), 'username':getcookie('username') }});
+        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username') }});
         document.dispatchEvent(evt);
     };
     var quitpwdOriginal = quitpwd;
