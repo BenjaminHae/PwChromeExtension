@@ -92,7 +92,16 @@ function showAvailableAccounts(accounts,url) {
         a.setAttribute("class", "list-group-item");
         if (account["active"])
             a.setAttribute("class", "list-group-item active");
-        a.appendChild(editIcon.cloneNode(true));
+        editIconHere = editIcon.cloneNode(true);
+        editIconHere.index = account["index"];
+        editIconHere.onclick = function(e){
+            var actions = [];
+            actions.push({"action":"login", "data":null});
+            actions.push({"action":"edit", "data":this.index);
+            openWithAction(actions);
+            e.stopPropagation();
+        }
+        a.appendChild(editIconHere);
         ul.appendChild(a);
     }
     if (accounts.length == 0){

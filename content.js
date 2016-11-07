@@ -38,6 +38,9 @@ function getActions() {
                 getActions();
                 break;
             case "edit":
+                executeScript(function(data){
+                    edit(data["index"]);
+                }, {'index': request["data"]});
                 break;
             case "addAccount":
                 break;

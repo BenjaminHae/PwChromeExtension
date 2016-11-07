@@ -43,6 +43,7 @@ function setAction(action, data){
     switch (action) {
         case "login": data = {"sk":secretkey0, "confKey":encryptchar(confkey,salt2), "salt":salt2}; 
                       break;
+        //in all other cases no modification is necessary
     }
     actionQueue.push({"request":action, "data":data, "date":new Date()});
 }
