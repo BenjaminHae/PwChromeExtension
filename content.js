@@ -57,7 +57,7 @@ executeScript(function(){
         console.log("105 - before");
         dataReadyOriginal(data);
         console.log("100 - after");
-        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username') }});
+        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': decryptchar(getconfkey(salt2),salt2), 'username':getcookie('username') }});
         document.dispatchEvent(evt);
     };
     var quitpwdOriginal = quitpwd;
