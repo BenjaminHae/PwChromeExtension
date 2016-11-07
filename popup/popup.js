@@ -112,7 +112,12 @@ function showAvailableAccounts(accounts,url) {
     }
     var a = document.createElement("a");
     a.innerHTML = '<i class="glyphicon glyphicon-plus"></i><strong>Add Account</strong>';
-    a.onclick = function(e){alert("We should handle this");};
+    a.onclick = function(e){
+        var actions = [];
+        actions.push({"action":"login", "data":null});
+        actions.push({"action":"addAccount", "data":{"url":url}});
+        openWithAction(actions);
+    };
     a.setAttribute("class", "list-group-item list-group-item-success");
     ul.appendChild(a);
 }

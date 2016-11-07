@@ -44,6 +44,10 @@ function getActions() {
                 }, {'index': request["data"]});
                 break;
             case "addAccount":
+                executeScript(function(data){
+                    $("#newiteminputurl").val(data["url"]);
+                    $("#newbtn").click();
+                }, {"url":request["data"]["url"]});
                 break;
             case "none": break;
         }
