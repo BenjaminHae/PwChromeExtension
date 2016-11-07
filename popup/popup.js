@@ -97,7 +97,7 @@ function showAvailableAccounts(accounts,url) {
         editIconHere.onclick = function(e){
             var actions = [];
             actions.push({"action":"login", "data":null});
-            actions.push({"action":"edit", "data":this.index);
+            actions.push({"action":"edit", "data":this.index});
             openWithAction(actions);
             e.stopPropagation();
         }
