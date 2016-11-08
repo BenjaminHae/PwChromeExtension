@@ -45,8 +45,8 @@ function getActions() {
                 break;
             case "addAccount":
                 executeScript(function(data){
-                    $("#newiteminputurl").val(data["url"]);
                     $('#add').modal('show');
+                    $("#newiteminputurl").val(data["url"]);
                 }, {"url":request["data"]["url"]});
                 break;
             case "none": break;
