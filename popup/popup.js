@@ -56,6 +56,7 @@ function showLoggedIn(loggedIn) {
         button.onclick = function(e) {
             var actions = [];
             actions.push({"action":"login", "data":null});
+            actions.push({"action":"logout", "data":null});
             openWithAction(actions);
         }
     }

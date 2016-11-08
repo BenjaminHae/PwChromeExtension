@@ -38,6 +38,11 @@ function getActions() {
                 }, {'sk': request["data"]["sk"],'confKey': request["data"]["confKey"], "salt":request["data"]["salt"]});
                 getActions();
                 break;
+            case "logout":
+                executeScript(function(data){
+                    quitpwd();
+                }, null);
+                break;
             case "edit":
                 executeScript(function(data){
                     edit(data["index"]);
