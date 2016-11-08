@@ -46,6 +46,7 @@ function getActions() {
             case "addAccount":
                 executeScript(function(data){
                     $('#add').modal('show');
+                    console.log("Setting URL field to "+data["url"]);
                     $("#newiteminputurl").val(data["url"]);
                 }, {"url":request["data"]["url"]});
                 break;
