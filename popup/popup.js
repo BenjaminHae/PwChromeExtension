@@ -50,7 +50,14 @@ function showLoggedIn(loggedIn) {
     button = document.getElementById('logInButton');
     if (loggedIn["status"]) {
         var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
-        document.getElementById("loggedIn").appendChild(textnode, button);
+        var link = document.createElement("span");
+        link.setAttribute("class", "glyphicon glyphicon-eye");
+        link.onclick = function(e) {
+            var actions = [];
+            actions.push({"action":"login", "data":null});
+            openWithAction(actions);
+        };
+        document.getElementById("loggedIn").appendChild(textnode, link, button);
         text = "Logout";
         cls += " btn-danger";
         button.onclick = function(e) {
@@ -58,7 +65,7 @@ function showLoggedIn(loggedIn) {
             actions.push({"action":"login", "data":null});
             actions.push({"action":"logout", "data":null});
             openWithAction(actions);
-        }
+        };
     }
     else {
         text = 'Login';
@@ -66,7 +73,7 @@ function showLoggedIn(loggedIn) {
         document.getElementById('accounts').setAttribute("class", "hidden");
         button.onclick = function(e) {
             clickLogin();
-        }
+        };
     }
     button.innerHTML = text;
     button.setAttribute("class", cls);
