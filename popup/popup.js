@@ -53,9 +53,7 @@ function showLoggedIn(loggedIn) {
         var link = document.createElement("span");
         link.setAttribute("class", "glyphicon glyphicon-eye");
         link.onclick = function(e) {
-            var actions = [];
-            actions.push({"action":"login", "data":null});
-            openWithAction(actions);
+            openWithAction([{"action":"login", "data":null}]);
         };
         document.getElementById("loggedIn").appendChild(textnode, link, button);
         text = "Logout";
