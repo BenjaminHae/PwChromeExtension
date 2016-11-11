@@ -120,7 +120,7 @@ function getUsername() {
 function getPassword(account) {
     doneAction();
     var key = decryptchar(account["enpassword"], secretkey);
-    var conf = decryptchar(confkey,salt2);
+    var conf = decryptchar(decryptchar(confkey,salt2),salt2);
     var sha512 = String(CryptoJS.SHA512(account["name"]));
     return get_orig_pwd(conf, salt2, sha512, default_letter_used, key);
 }
