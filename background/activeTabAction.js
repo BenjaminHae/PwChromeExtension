@@ -12,9 +12,3 @@ function executeScript(script, args) {
     var payload = '(' + script + ')('+JSON.stringify(args)+');';
     chrome.tabs.executeScript({code : payload});
 }
-
-document.addEventListener('secretKeyReady', function (e) {
-    console.log('secretKeyReady');
-    var secretkey = e.detail;
-    ReceiveSecretkey(secretkey);
-});
