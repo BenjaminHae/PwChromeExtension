@@ -52,7 +52,13 @@ function showLoggedIn(loggedIn) {
         var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
         var link = document.createElement("span");
         link.setAttribute("class", "glyphicon glyphicon-eye-open");
-        document.getElementById("loggedIn").appendChild(textnode, link, button);
+        button.onclick = function(e) {
+            var actions = [];
+            actions.push({"action":"login", "data":null});
+            openWithAction(actions);
+        };
+        document.getElementById("loggedIn").appendChild(textnode, button);
+        document.getElementById("loggedIn").appendChild(link, textnode);
         text = "Logout";
         cls += " btn-danger";
         button.onclick = function(e) {
