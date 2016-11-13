@@ -59,13 +59,6 @@ for (var i = 0; i < contexts.length; i++) {
 
 // Create context entries 
 var contextEntries = [];
-// Page
-//contextEntries["add"] = chrome.contextMenus.create(
-//        {"title": "Add Account", "parentId": menu["page"], "onclick": genericOnClick});
-//contextEntries["show"] = chrome.contextMenus.create(
-//        {"title": "Show Account", "parentId": menu["page"], "onclick": genericOnClick});
-//contextEntries["login"] = chrome.contextMenus.create(
-//        {"title": "Show Account", "parentId": menu["page"], "onclick": genericOnClick});
 // Editable
 contextEntries["user"] = chrome.contextMenus.create(
         {"title": "Insert Username", "parentId": menu["editable"], "contexts":[context], "onclick": genericOnClick});

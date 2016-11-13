@@ -82,6 +82,7 @@ function receiveUserSession(session) {
         confkey = session["confkey"];
         username = session["username"];
         getAccounts(session["session_token"]);
+        chrome.browserAction.setIcon({ path: "iconLoggedIn.png" });
         doneAction();
         return;
     }
@@ -104,6 +105,7 @@ function cleanup(){
 	confkey = null;
 	username = null;
     lastAction = null;
+    chrome.browserAction.setIcon({ path: "iconLoggedOut.png" });
     console.log("Logged out");
 }
 
