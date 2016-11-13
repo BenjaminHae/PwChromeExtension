@@ -50,9 +50,10 @@ function showLoggedIn(loggedIn) {
     button = document.getElementById('logInButton');
     if (loggedIn["status"]) {
         var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
-        var link = document.createElement("span");
+        var link = document.createElement("a");
         link.setAttribute("class", "glyphicon glyphicon-eye-open");
         link.setAttribute("id", "openManager");
+        link.setAttribute("href", "#");
         link.onclick = function(e) {
             var actions = [];
             actions.push({"action":"login", "data":null});
