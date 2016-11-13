@@ -29,7 +29,7 @@ function InsertUsername(url){
         insertTextIntoSelectedInput(account["username"]);
     }
     else {
-        if (!loggedIn())
+        if (!isLoggedIn())
             insertTextIntoSelectedInput("not logged in");
         else
             insertTextIntoSelectedInput("no account found");
