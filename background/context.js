@@ -28,8 +28,12 @@ function InsertUsername(url){
     if (account != null) {
         insertTextIntoSelectedInput(account["username"]);
     }
-    else 
-        insertTextIntoSelectedInput("not found");
+    else {
+        if (!loggedIn())
+            insertTextIntoSelectedInput("not logged in");
+        else
+            insertTextIntoSelectedInput("no account found");
+    }
 }
 
 function InsertPassword(url){
