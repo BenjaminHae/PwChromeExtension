@@ -94,8 +94,10 @@ function cleanup(){
         for (value in accounts[item])
             accounts[item][value] = null;
     }
-    accounts.length = 0;
-    accounts = null;
+    if (accounts!= null) {
+        accounts.length = 0;
+        accounts = null;
+    }
     data = null;
     secretkey = null;
     default_letter_used = null;
