@@ -4,7 +4,7 @@ function save_options() {
   var timeout = document.getElementById('timeout').value;
   var url = document.getElementById('url').value;
   chrome.storage.sync.set({
-    timeout: int(timeout),
+    timeout: parseInt(timeout),
     url: url
   }, function() {
     // Update status to let user know options were saved.
