@@ -24,7 +24,8 @@
     "permissions": [
         "activeTab",
         "https://%HOST%/",
-        "contextMenus"
+        "contextMenus",
+        "storage"
     ],
     "options_ui": {
         "page":"popup/options.html",
