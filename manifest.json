@@ -25,5 +25,9 @@
         "activeTab",
         "https://%HOST%/",
         "contextMenus"
-    ]
+    ],
+    "options_ui": {
+        "page":"popup/options.html",
+        "chrome_style":true
+    }
 }

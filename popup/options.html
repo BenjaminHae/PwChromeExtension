@@ -1,0 +1,23 @@
+<!-- ToDo: https://developer.chrome.com/extensions/optionsV2-->
+<!DOCTYPE html>
+<html>
+    <head><title>My Test Extension Options</title></head>
+    <body>
+
+        <label for="timeout">Logout after no action for</label>
+        <select id="timeout">
+            <option value="10">10 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="-1">never timeout</option>
+        </select>
+
+        <label for="url">Password-Manager URL:</label>
+        <input type="url" id="url" placeholder="https://www.yourdomain.com/pw/">
+
+        <div id="status"></div>
+        <button id="save">Save</button>
+
+        <script src="options.js"></script>
+    </body>
+</html>
