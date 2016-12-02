@@ -6,16 +6,17 @@
 
         <label for="timeout">Logout after no action for</label>
         <select id="timeout">
+            <option value="1">1 minutes</option>
+            <option value="5">5 minutes</option>
             <option value="10">10 minutes</option>
             <option value="30">30 minutes</option>
             <option value="60">60 minutes</option>
-            <option value="-1">never timeout</option>
-        </select>
+        </select><br/>
 
         <label for="url">Password-Manager URL:</label>
-        <input type="url" id="url" placeholder="https://www.yourdomain.com/pw/">
+        <input type="url" id="url" placeholder="https://www.yourdomain.com/pw/"><br/>
 
-        <div id="status"></div>
+        <div id="status"></div><br/>
         <button id="save">Save</button>
 
         <script src="options.js"></script>
