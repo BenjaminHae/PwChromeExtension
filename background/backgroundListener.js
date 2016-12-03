@@ -12,6 +12,7 @@ chrome.extension.onConnect.addListener(function(port) {
             port.postMessage(JSON.stringify({'request':request, 'data':data}));
         }
         switch(request["request"]){
+            case "Host": sendPopupRequest('Host', {'url':host}); break;
             case "LoggedIn": 
                 var loggedIn = isLoggedIn();
                 var data={'status':loggedIn};
@@ -38,6 +39,18 @@ chrome.extension.onConnect.addListener(function(port) {
         }
     });
 });
+
+//get's called in hostCommunications so all variables are ready
+function loadSettings(callback) {
+    chrome.storage.sync.get({
+        timeout: 10,
+        url: ""
+    }, function(items) {
+        inactiveTimeout = items.timeout * 60 * 1000;
+        host = items.url;
+        callback();
+    });
+}
 
 function setAction(action, data){
     switch (action) {
@@ -70,6 +83,7 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
                             action = {"request": "none"};
                         sendResponse(action);
                         break;
+        case "host": sendResponse({"request":"host", "data":{"url":host}}); break;
     }
     return true;
 });

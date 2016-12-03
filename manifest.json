@@ -9,7 +9,7 @@
         "default_icon": "iconLoggedOut.png",
         "default_popup": "popup/popup.html"
     },
-    "content_scripts":[{"matches":["https://%HOST%/password.php"], "js":["content.js"], "run_at":"document_end"}],
+    "content_scripts":[{"matches":["*://*/*"], "js":["content.js"], "run_at":"document_end"}],
     "background": {
         "scripts": ["background/context.js",
             "background/activeTabAction.js",
@@ -23,7 +23,7 @@
     },
     "permissions": [
         "activeTab",
-        "https://%HOST%/",
+        "*://*/*",
         "contextMenus",
         "storage"
     ],

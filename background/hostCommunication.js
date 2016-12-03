@@ -1,4 +1,4 @@
-var host = "https://%HOST%/";
+var host = "";
 var accounts;
 var data;
 var secretkey;
@@ -14,7 +14,7 @@ var activeAccountIndex;
 var activeAccountUrl;//ToDo remove
 
 var lastAction;
-const inactiveTimeout = 10 * 60 * 1000;
+var inactiveTimeout = 10 * 60 * 1000;
 
 function timeOut() {
     if (lastAction==null) {
@@ -173,4 +173,4 @@ function setActiveAccount(index, url) {
     activeAccountUrl = url;
 }
 
-timeOut();
+loadSettings(function(){ timeOut(); });

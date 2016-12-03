@@ -1,14 +1,16 @@
 // Open a connection to the background
 
+var host = "";
+
 var port = chrome.extension.connect({
-    name: "Sample Communication"
+    name: "Background connect"
 });
 port.onMessage.addListener(function(msg) {
-    console.log("message recieved" + msg);
     var request = JSON.parse(msg);
     switch(request["request"]){
         case "LoggedIn": showLoggedIn(request["data"]); break;
         case "AvailableAccounts": showAvailableAccounts(request["data"]["accounts"],request["data"]["url"]); break;
+        case "Host": host = request["data"]["url"]; break;
     }
     
 });
@@ -35,6 +37,7 @@ function getCurrentTabUrl(callback) {
 /* Init content */
 
 document.addEventListener('DOMContentLoaded', function() {
+  sendBackgroundRequest('Host',null);
   sendBackgroundRequest('LoggedIn',null);
   getCurrentTabUrl(function(url) {
       sendBackgroundRequest("AvailableAccounts",{'url':url});
@@ -139,9 +142,9 @@ function openWithAction(actions) {
         sendBackgroundRequest("setAction", action);
         action = actions.shift();
     }
-    chrome.tabs.create({url:"https://%HOST%/"});
+    chrome.tabs.create({url:host});
 }
 
 function clickLogin() {
-    chrome.tabs.create({url:"https://%HOST%/"});
+    chrome.tabs.create({url:host});
 }
