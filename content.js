@@ -1,6 +1,8 @@
+//ToDo guid for pwmanager
 var PwAddonHost = "";
 chrome.runtime.sendMessage({"request":"host"}, function(response) {
     PwAddonHost = response["data"]["url"];
+}
     if (document.location.href.startsWith(PwAddonHost+'password.php')) {
         console.log('PwChromeAddon injected');
         document.addEventListener('secretKeyReady', function(e){
@@ -36,6 +38,8 @@ chrome.runtime.sendMessage({"request":"host"}, function(response) {
                     case "login":
                         //data contains secretkey. It must be set using executeScript
                         executeScript(function(data){
+                            if (thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                                return;
                             console.log('logging in');
                             console.log(data);
                             var salt = data["salt"];
@@ -45,16 +49,22 @@ chrome.runtime.sendMessage({"request":"host"}, function(response) {
                         break;
                     case "logout":
                         executeScript(function(data){
+                            if (thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                                return;
                             quitpwd();
                         }, null);
                         break;
                     case "edit":
                         executeScript(function(data){
+                            if (thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                                return;
                             edit(data["index"]);
                         }, {'index': request["data"]});
                         break;
                     case "addAccount":
                         executeScript(function(data){
+                            if (thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                                return;
                             $('#add').modal('show');
                             console.log("Setting URL field to "+data["url"]);
                             $("#newiteminputurl").val(data["url"]);
@@ -68,6 +78,8 @@ chrome.runtime.sendMessage({"request":"host"}, function(response) {
         console.log(104);
 
         executeScript(function(){
+            if (thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                return;
             var dataReadyOriginal = dataReady; 
             dataReady = function(data) {
                 console.log("105 - before");
