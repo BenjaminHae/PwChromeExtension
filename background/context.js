@@ -46,7 +46,7 @@ function InsertPassword(url){
 }
 
 // Create one test item for each context type.
-var contexts = ["page","editable"];
+var contexts = ["editable"];//"page"
 var menu =[];
 for (var i = 0; i < contexts.length; i++) {
     var context = contexts[i];
