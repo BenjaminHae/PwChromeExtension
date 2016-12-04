@@ -4,8 +4,8 @@
 var actionQueue = [];
 
 // listen to popup.js
-chrome.extension.onConnect.addListener(function(port) {
-    console.log("Connected .....");
+chrome.runtime.onConnect.addListener(function(port) {
+    console.log(port.name + " connected .....");
     port.onMessage.addListener(function(msg) {
         var request = JSON.parse(msg);
         function sendPopupRequest(request, data) {

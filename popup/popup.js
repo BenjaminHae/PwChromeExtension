@@ -2,8 +2,8 @@
 
 var host = "";
 
-var port = chrome.extension.connect({
-    name: "Background connect"
+var port = chrome.runtime.connect({
+    name: "popup"
 });
 port.onMessage.addListener(function(msg) {
     var request = JSON.parse(msg);

@@ -66,6 +66,7 @@ function getActions() {
         }
     });
 }
+//ToDo: only execute when necessary
 getActions();
 
 executeScript(function(){
