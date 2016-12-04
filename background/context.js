@@ -10,6 +10,9 @@ function genericOnClick(info, tab) {
         case contextEntries["password"]: 
                                       InsertPassword(tab.url);
                                       break;
+        case contextEntries["signin"]: 
+                                      InsertUsernameAndPasswordAndSignin(tab.url);
+                                      break;
     }
 }
 
@@ -45,6 +48,22 @@ function InsertPassword(url){
         insertTextIntoSelectedInput("");
 }
 
+function InsertUsernameAndPasswordAndSignin(url){
+    account = getAccount(url);
+    if (account != null) {
+        executeScript(function (args) {
+            var input = document.activeElement;
+            input.value = args["user"];
+            form = input.closest("form");
+            passwd = form.querySelectorAll("input[type=password]")[0];
+            passwd.value = args["passwd"];
+            form.submit();
+        }, { 'user':account["username"], 'passwd':getPassword(account)});
+    }
+    else
+        insertTextIntoSelectedInput("no account found");
+}
+
 // Create one test item for each context type.
 var contexts = ["editable"];//"page"
 var menu =[];
@@ -64,3 +83,5 @@ contextEntries["user"] = chrome.contextMenus.create(
         {"title": "Insert Username", "parentId": menu["editable"], "contexts":[context], "onclick": genericOnClick});
 contextEntries["password"] = chrome.contextMenus.create(
         {"title": "Insert Password", "parentId": menu["editable"], "contexts":[context], "onclick": genericOnClick});
+contextEntries["signin"] = chrome.contextMenus.create(
+        {"title": "Sign in", "parentId": menu["editable"], "contexts":[context], "onclick": genericOnClick});
