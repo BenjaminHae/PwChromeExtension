@@ -10,12 +10,10 @@ This addon doesn't write any changes to the password manager.
 Installation
 ------------
 
-Make sure you have an instance of the password manager(version 9.09 and above) installed.
-Get the code of this addon. You need to replace https://%HOST%/ with the address of your own instance of the password manager. For example using this command:
-
-    find ./ -type f -exec sed -i -e 's#%HOST%#www.yourhost.de#g' {}\;
-
+Make sure you have an instance of the password manager(version 9.11 and above) installed.
+Get the code of this addon. 
 Now you load the extension in chrome as described here: https://developer.chrome.com/extensions/getstarted#unpacked
+Afterwards navigate to the options page and fill in the url of your password manager instance.
 
 Usage
 ----- 
