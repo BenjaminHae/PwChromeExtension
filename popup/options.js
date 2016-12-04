@@ -1,15 +1,19 @@
+// select storage location
+storage = chrome.storage.local;
+if ("sync" in chrome.storage)
+    storage = chrome.storage.sync;
 
 function ValidURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)'+ // protocol
-  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
-  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-  return pattern.test(str);
+    var pattern = new RegExp('^(https?:\\/\\/)'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return pattern.test(str);
 }
 
-// Saves options to chrome.storage.sync.
+// Saves options to chrome.storage
 function save_options() {
     var timeout = document.getElementById('timeout').value;
     var url = document.getElementById('url').value;
@@ -22,7 +26,7 @@ function save_options() {
         document.getElementById('url').value = url;
     }
 
-    chrome.storage.sync.set({
+    storage.set({
         timeout: parseInt(timeout),
         url: url
     }, function() {
@@ -39,7 +43,7 @@ function save_options() {
 // stored in chrome.storage.
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
-    chrome.storage.sync.get({
+    storage.get({
         timeout: 10,
         url: ""
     }, function(items) {

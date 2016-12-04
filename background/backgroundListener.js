@@ -42,7 +42,10 @@ chrome.runtime.onConnect.addListener(function(port) {
 
 //get's called in hostCommunications so all variables are ready
 function loadSettings(callback) {
-    chrome.storage.sync.get({
+    var storage = chrome.storage.local;
+    if ("sync" in chrome.storage)
+        storage = chrome.storage.sync;
+    storage.get({
         timeout: 10,
         url: ""
     }, function(items) {
