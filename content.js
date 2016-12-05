@@ -1,4 +1,3 @@
-//ToDo guid for pwmanager
 var pwAddonHost = false;
 chrome.runtime.sendMessage({"request":"host"}, function(response) {
     pwAddonHost = document.location.href.startsWith(response["data"]["url"] + 'password.php');

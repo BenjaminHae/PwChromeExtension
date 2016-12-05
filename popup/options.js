@@ -36,6 +36,7 @@ function save_options() {
         setTimeout(function() {
             status.textContent = '';
         }, 750);
+        chrome.runtime.sendMessage({"request":"options"}, function(response) {});
     });
 }
 

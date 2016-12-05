@@ -87,6 +87,7 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
                         sendResponse(action);
                         break;
         case "host": sendResponse({"request":"host", "data":{"url":host}}); break;
+        case "options": loadSettings(function(){ timeOut(); }); break;
     }
     return true;
 });

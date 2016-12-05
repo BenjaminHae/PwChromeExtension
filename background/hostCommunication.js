@@ -9,7 +9,6 @@ var salt1;
 var salt2;
 var confkey;
 var username;
-
 var activeAccountIndex;
 var activeAccountUrl;//ToDo remove
 
