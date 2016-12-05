@@ -3,6 +3,9 @@
 
 var actionQueue = [];
 
+//Logged out on startup
+chrome.browserAction.setIcon({ path: "iconLoggedOut.png" });
+
 // listen to popup.js
 chrome.runtime.onConnect.addListener(function(port) {
     console.log(port.name + " connected .....");
