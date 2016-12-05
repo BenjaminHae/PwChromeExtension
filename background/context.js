@@ -32,8 +32,10 @@ function InsertUsername(url){
         insertTextIntoSelectedInput(account["username"]);
     }
     else {
-        if (!isLoggedIn())
+        if (!isLoggedIn()) {
+            chrome.tabs.create({url:host});
             insertTextIntoSelectedInput("not logged in");
+        }
         else
             insertTextIntoSelectedInput("no account found");
     }
@@ -44,8 +46,12 @@ function InsertPassword(url){
     if (account != null) {
         insertTextIntoSelectedInput(getPassword(account));
     }
-    else
+    else {
+        if (!isLoggedIn()) {
+            chrome.tabs.create({url:host});
+        }
         insertTextIntoSelectedInput("");
+    }
 }
 
 function InsertUsernameAndPasswordAndSignin(url){
@@ -60,8 +66,14 @@ function InsertUsernameAndPasswordAndSignin(url){
             form.submit();
         }, { 'user':account["username"], 'passwd':getPassword(account)});
     }
-    else
-        insertTextIntoSelectedInput("no account found");
+    else {
+        if (!isLoggedIn()) {
+            chrome.tabs.create({url:host});
+            insertTextIntoSelectedInput("not logged in");
+        }
+        else
+            insertTextIntoSelectedInput("no account found");
+    }
 }
 
 // Create one test item for each context type.
