@@ -51,6 +51,7 @@ function showLoggedIn(loggedIn) {
     var text;
     var cls="btn";
     button = document.getElementById('logInButton');
+    document.getElementById('options').onclick = function(e) { showOptions(); };
     if (loggedIn["status"]) {
         var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
         var link = document.createElement("a");
@@ -74,12 +75,14 @@ function showLoggedIn(loggedIn) {
         };
     }
     else {
+        if (host != "")
+            clickLogin();
+        else
+            showOptions();
         text = 'Login';
         cls += " btn-success";
         document.getElementById('accounts').setAttribute("class", "hidden");
-        button.onclick = function(e) {
-            clickLogin();
-        };
+        button.onclick = function(e) { clickLogin(); };
     }
     button.innerHTML = text;
     button.setAttribute("class", cls);
@@ -147,4 +150,7 @@ function openWithAction(actions) {
 
 function clickLogin() {
     chrome.tabs.create({url:host});
+}
+function showOptions() {
+    chrome.runtime.openOptionsPage();
 }

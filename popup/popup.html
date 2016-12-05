@@ -18,12 +18,12 @@
             padding:10px;
         }
         #status {
-          /* avoid an excessively wide status text */
-          /*white-space: pre;*/
-          text-overflow: ellipsis;
-          overflow: hidden;
-          max-width: 400px;
-          min-width: 200px;
+            /* avoid an excessively wide status text */
+            /*white-space: pre;*/
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 400px;
+            min-width: 200px;
         }
         #logInButton{float:right;}
         .list-group-item {padding: 3px 10px;}
@@ -41,15 +41,20 @@
     <body>
         <div id="status">
             <div id="loggedIn"><button type="button" id="logInButton" class="btn btn-success">Login</button></div>
+            <div>
+                <a href="#" id="options">
+                    <i class="glyphicon glyphicon-cog"></i>
+                </a>
+            </div>
+        </div>
 
-            <div id="accounts">
-                <h3>Accounts</h3>
-                <div id="accounts-list" class="list-group">
-                    <a href="#" id="newAccount" class="list-group-item list-group-item-success">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        <strong>Add Account</strong>
-                    </a>
-                </div>
+        <div id="accounts">
+            <h3>Accounts</h3>
+            <div id="accounts-list" class="list-group">
+                <a href="#" id="newAccount" class="list-group-item list-group-item-success">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <strong>Add Account</strong>
+                </a>
             </div>
         </div>
     </body>
