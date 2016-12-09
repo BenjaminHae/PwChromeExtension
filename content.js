@@ -78,10 +78,10 @@ executeScript(function(){
         document.dispatchEvent(evt);
     };
     var quitpwdOriginal = quitpwd;
-    quitpwd = function() {
+    quitpwd = function(reason) {
         var evt= new CustomEvent("loggedOut", {});
         document.dispatchEvent(evt);
-        quitpwdOriginal();
+        quitpwdOriginal(reason);
     }
     var quitpwd_untrustOriginal = quitpwd_untrust;
     quitpwd_untrust = function() {
