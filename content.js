@@ -31,7 +31,7 @@ function getActions() {
             case "login":
                 //data contains secretkey. It must be set using executeScript
                 executeScript(function(data){
-                    if (thisIsThePasswordManager === undefined || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
                         return;
                     console.log('logging in');
                     var salt = data["salt"];
@@ -41,21 +41,21 @@ function getActions() {
                 break;
             case "logout":
                 executeScript(function(data){
-                    if (thisIsThePasswordManager === undefined || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
                         return;
                     quitpwd();
                 }, null);
                 break;
             case "edit":
                 executeScript(function(data){
-                    if (thisIsThePasswordManager === undefined || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
                         return;
                     edit(data["index"]);
                 }, {'index': request["data"]});
                 break;
             case "addAccount":
                 executeScript(function(data){
-                    if (thisIsThePasswordManager === undefined || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
                         return;
                     $('#add').modal('show');
                     $("#newiteminputurl").val(data["url"]);
@@ -69,7 +69,7 @@ function getActions() {
 getActions();
 
 executeScript(function(){
-    if (thisIsThePasswordManager === undefined || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
         return;
     var dataReadyOriginal = dataReady; 
     dataReady = function(data) {
