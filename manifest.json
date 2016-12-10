@@ -3,7 +3,7 @@
 
     "name": "Password Manager",
     "description": "This extension connects to your password manager and inserts passwords and usernames into input fields.",
-    "version": "1.0",
+    "version": "0.2-beta",
 
     "browser_action": {
         "default_icon": "iconLoggedOut.png",
