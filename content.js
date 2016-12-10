@@ -25,7 +25,7 @@ script.remove();
 function getActions() {
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
         if (!pwAddonHost)//check if this is really the right url before sending any confidential data
-            return
+            return;
         var request = response;//JSON.parse(response);
         switch(request["request"]){
             case "login":
@@ -63,6 +63,8 @@ function getActions() {
                 break;
             case "none": break;
         }
+        var evt= new CustomEvent("actionsReceived", null);
+        document.dispatchEvent(evt);
     });
 }
 //ToDo: only execute when necessary
@@ -71,9 +73,21 @@ getActions();
 executeScript(function(){
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
         return;
+    document.addEventListener('actionsReceived', function(e){
+            actionsReceived = true;
+            if (dataAvailable != false)
+                dataReady(dataAvailable);
+        });
+    var actionsReceived = false;
+    var dataAvailable = false;
     var dataReadyOriginal = dataReady; 
     dataReady = function(data) {
+        if (!actionsReceived) {
+            dataAvailable = data;
+            return;
+        }
         dataReadyOriginal(data);
+        dataAvailable = false;
         var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username') }});
         document.dispatchEvent(evt);
     };
