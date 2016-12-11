@@ -4,6 +4,7 @@ chrome.runtime.sendMessage({"request":"host"}, function(response) {
 });
 document.addEventListener('secretKeyReady', function(e){
     //send secretKey to Addon
+    getActions();
     chrome.runtime.sendMessage({"request":"session", "data":e.detail}, function(response) {
     });
 }, false);
@@ -37,7 +38,6 @@ function getActions() {
                     var salt = data["salt"];
                     setpwdstore(data["sk"],decryptchar(data["confKey"],salt),salt);
                 }, {'sk': request["data"]["sk"],'confKey': request["data"]["confKey"], "salt":request["data"]["salt"]});
-                getActions();
                 break;
             case "logout":
                 executeScript(function(data){
@@ -86,8 +86,8 @@ executeScript(function(){
             dataAvailable = data;
             return;
         }
-        dataReadyOriginal(data);
         dataAvailable = false;
+        dataReadyOriginal(data);
         var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username') }});
         document.dispatchEvent(evt);
     };
