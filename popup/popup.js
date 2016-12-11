@@ -53,7 +53,10 @@ function showLoggedIn(loggedIn) {
     button = document.getElementById('logInButton');
     document.getElementById('options').onclick = function(e) { showOptions(); };
     if (loggedIn["status"]) {
-        var textnode = document.createTextNode("Logged in as "+ loggedIn["username"]);
+        var textnode = document.createTextNode("Logged in as ");
+        var user = document.createElement("span");
+        user.setAttribute("id","user");
+        user.textContent = loggedIn["username"];
         var link = document.createElement("a");
         link.setAttribute("class", "glyphicon glyphicon-eye-open");
         link.setAttribute("id", "openManager");
@@ -63,8 +66,10 @@ function showLoggedIn(loggedIn) {
             actions.push({"action":"login", "data":null});
             openWithAction(actions);
         };
-        document.getElementById("loggedIn").appendChild(textnode, button);
-        document.getElementById("loggedIn").appendChild(link, textnode);
+        user.appendChild(link);
+        document.getElementById("loggedIn").appendChild(button);
+        document.getElementById("loggedIn").appendChild(textnode);
+        document.getElementById("loggedIn").appendChild(user);
         text = "Logout";
         cls += " btn-danger";
         button.onclick = function(e) {
@@ -84,7 +89,7 @@ function showLoggedIn(loggedIn) {
         document.getElementById('accounts').setAttribute("class", "hidden");
         button.onclick = function(e) { clickLogin(); };
     }
-    button.innerHTML = text;
+    button.textContent = text;
     button.setAttribute("class", cls);
 }
 
@@ -99,16 +104,16 @@ function showAvailableAccounts(accounts,url) {
     for (item in accounts) {
         var account = accounts[item];
         var a = document.createElement("a");
-        a.innerHTML = account["name"]+" ("+account["username"]+')';
+        a.textContent = account["name"]+" ("+account["username"]+')';
         a.index = account["index"];
         a.url = url;
         a.onclick = function(e){ 
             sendBackgroundRequest("setAccount",{"index":this.index, "url":this.url});
             sendBackgroundRequest("AvailableAccounts",{'url':this.url});
         }; 
-        a.setAttribute("class", "list-group-item");
+        a.setAttribute("class", "list-group-item clearfix");
         if (account["active"])
-            a.setAttribute("class", "list-group-item active");
+            a.setAttribute("class", "list-group-item active clearfix");
         editIconHere = editIcon.cloneNode(true);
         editIconHere.index = account["index"];
         editIconHere.onclick = function(e){
@@ -118,12 +123,12 @@ function showAvailableAccounts(accounts,url) {
             openWithAction(actions);
             e.stopPropagation();
         }
-        a.appendChild(editIconHere);
+        a.prepend(editIconHere);
         ul.appendChild(a);
     }
     if (accounts.length == 0){
         var a = document.createElement("a");
-        a.innerHTML = "No accounts found";
+        a.textContent = "No accounts found";
         a.setAttribute("class", "list-group-item disabled");
         ul.appendChild(a);
     }

@@ -14,9 +14,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
         <style>
-        body {
-            padding:10px;
-        }
+        body { padding:10px; }
         #status {
             /* avoid an excessively wide status text */
             /*white-space: pre;*/
@@ -25,6 +23,7 @@
             max-width: 400px;
             min-width: 200px;
         }
+        #user{white-space:nowrap;}
         #logInButton{float:right;}
         .list-group-item {padding: 3px 10px;}
         #openManager { margin-left:5px; }
@@ -41,11 +40,6 @@
     <body>
         <div id="status">
             <div id="loggedIn"><button type="button" id="logInButton" class="btn btn-success">Login</button></div>
-            <div>
-                <a href="#" id="options">
-                    <i class="glyphicon glyphicon-cog"></i>
-                </a>
-            </div>
         </div>
 
         <div id="accounts">
@@ -56,6 +50,11 @@
                     <strong>Add Account</strong>
                 </a>
             </div>
+        </div>
+        <div class="pull-right" style="clear:right;">
+            <a href="#" id="options">
+                <i class="glyphicon glyphicon-cog"></i>
+            </a>
         </div>
     </body>
 </html>
