@@ -3,7 +3,7 @@
 
     "name": "Password Manager",
     "description": "This extension connects to your password manager and inserts passwords and usernames into input fields.",
-    "version": "0.2",
+    "version": "0.2.1",
     "update_url": "https://raw.githubusercontent.com/BenjaminHae/PwChromeExtension/master/version.xml",
 
     "browser_action": {

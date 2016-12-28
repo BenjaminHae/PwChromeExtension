@@ -1,7 +1,7 @@
 Chrome Addon
 ============
 
-Version 0.2-beta
+Version 0.2.1-beta
 
 This is a Chrome Extension for the password manager(https://github.com/zeruniverse/Password-Manager).
 It currently supports inserting username and password into inputs in pages for whose urls accounts exist.
