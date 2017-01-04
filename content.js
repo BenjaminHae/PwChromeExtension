@@ -25,8 +25,11 @@ script.remove();
 
 function getActions() {
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
-        if (!pwAddonHost)//check if this is really the right url before sending any confidential data
+        if (!pwAddonHost) {//check if this is really the right url before sending any confidential data
+            var evt= new CustomEvent("actionsReceived", null);
+            document.dispatchEvent(evt);
             return;
+        }
         var request = response;//JSON.parse(response);
         switch(request["request"]){
             case "login":
