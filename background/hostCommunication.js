@@ -68,6 +68,7 @@ function readPasswords()
         var other = JSON.parse(decryptchar(String(account["additional"]),secretkey));
         accounts[index]  = { "index":index, "name":decryptchar(account["name"], secretkey), "url":other["url"], "username":other["user"], "enpassword": account["kss"]};
     }
+    chrome.browserAction.setIcon({ path: "iconLoggedIn.png" });
     console.log("Decrypted Accounts");
 }
 
@@ -81,7 +82,6 @@ function receiveUserSession(session) {
         confkey = session["confkey"];
         username = session["username"];
         getAccounts(session["session_token"]);
-        chrome.browserAction.setIcon({ path: "iconLoggedIn.png" });
         doneAction();
         return;
     }
