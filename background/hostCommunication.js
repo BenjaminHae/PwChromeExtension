@@ -11,6 +11,7 @@ var confkey;
 var username;
 var activeAccountIndex;
 var activeAccountUrl;//ToDo remove
+var error = "";
 
 var lastAction;
 var inactiveTimeout = 10 * 60 * 1000;
@@ -48,6 +49,12 @@ function readData(data0) {
     console.log("Received Data");
     doneAction();
     data = data0;
+    if (data["status"] != "success") {
+        error = "Server Error: " + data["message"];
+        console.log(error);
+        cleanup();
+        return;
+    }
     default_letter_used = data["default_letter_used"];
     default_length = data["default_length"];
     salt1 = data["global_salt_1"];
@@ -73,6 +80,7 @@ function readPasswords()
 }
 
 function receiveUserSession(session) {
+    error = "";
     doneAction();
     console.log("Received session");
     secretkeyNew = session["secretkey"];

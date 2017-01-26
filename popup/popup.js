@@ -80,10 +80,18 @@ function showLoggedIn(loggedIn) {
         };
     }
     else {
-        if (host != "")
-            clickLogin();
-        else
-            showOptions();
+        var error = loggedIn["error"];
+        if (error != "") {
+            var errormsg = document.createElement("p");
+            errormsg.textContent = error;
+            document.getElementById("status").appendChild(errormsg);
+        }
+        else{
+            if (host != "")
+                clickLogin();
+            else
+                showOptions();
+        }
         text = 'Login';
         cls += " btn-success";
         document.getElementById('accounts').setAttribute("class", "hidden");

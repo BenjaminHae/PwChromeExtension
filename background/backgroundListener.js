@@ -22,6 +22,9 @@ chrome.runtime.onConnect.addListener(function(port) {
                 if (loggedIn){
                     data["username"] = getUsername();
                 }
+                else {
+                    data["error"] = error;
+                }
                 sendPopupRequest('LoggedIn',data); 
                 break;
             case "AvailableAccounts": 
@@ -83,8 +86,7 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     switch(myMessage["request"]){
         case "session": receiveUserSession(myMessage["data"]); break;
         case "logout":  cleanup(); break;
-        case "actions": console.log("actions");
-                        var action = getLatestAction();
+        case "actions": var action = getLatestAction();
                         if (action == null)
                             action = {"request": "none"};
                         sendResponse(action);
