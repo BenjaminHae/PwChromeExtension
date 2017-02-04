@@ -40,7 +40,7 @@ function getAccounts(session_token) {
             readData(JSON.parse(this.responseText));
         }
     };
-    xhttp.open("POST", host + "password_ajax.php", true);
+    xhttp.open("POST", host + "rest/password.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
     xhttp.send("session_token="+session_token);
 }
