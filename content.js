@@ -14,6 +14,9 @@ document.addEventListener('loggedOut', function(e){
     chrome.runtime.sendMessage({"request":"logout", "data":{"url": e.detail.url}}, function(response) {
     });
 }, false);
+document.addEventListener('selectedAccount', function(e){
+    chrome.runtime.sendMessage({"request":"selectAccount", "data":e.detail.index}, function(response) {
+}, false);
 
 function executeScript(script,args) {
     var payload = '(' + script + ')('+JSON.stringify(args)+');';
@@ -108,13 +111,16 @@ executeScript(function(){
         quitpwd_untrustOriginal();
     };
     registerPlugin("drawAccount",function(data){
-	    var account = data["account"];
+        var account = data["account"];
         var row = data["row"];
-		row.find(".namecell .cellOptionButton:last").before($('<a>')
-		    .attr('title',"Open")
-			.attr('class','cellOptionButton')
-			.attr('href',addHttps(account["other"]["url"])) 
-			.append($('<span></span>')
-			    .attr('class','glyphicon glyphicon-globe')));
-});
+        row.find(".namecell .cellOptionButton:last").before($('<a>')
+            .attr('title',"Select")
+            .attr('class','cellOptionButton')
+            .on('click',{'index':account["index"]}, function(data){
+                    var evt= new CustomEvent("selectedAccount", {"detail":{"index":data.index}});
+                    document.dispatchEvent(evt);
+                })
+            .append($('<span></span>')
+                .attr('class','glyphicon glyphicon-share')));
+    });
 },null);
