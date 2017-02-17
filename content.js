@@ -76,6 +76,7 @@ getActions();
 executeScript(function(){
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
         return;
+    //ToDo: checkUrl here 
     document.addEventListener('actionsReceived', function(e){
             actionsReceived = true;
             if (dataAvailable != false)
