@@ -11,7 +11,7 @@ document.addEventListener('secretKeyReady', function(e){
 
 document.addEventListener('loggedOut', function(e){
     //log addon out
-    chrome.runtime.sendMessage({"request":"logout"}, function(response) {
+    chrome.runtime.sendMessage({"request":"logout", "data":{"url": e.detail.url}}, function(response) {
     });
 }, false);
 
@@ -91,18 +91,18 @@ executeScript(function(){
         }
         dataAvailable = false;
         dataReadyOriginal(data);
-        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username') }});
+        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username'), 'url':window.location.href }});
         document.dispatchEvent(evt);
     };
     var quitpwdOriginal = quitpwd;
     quitpwd = function(reason) {
-        var evt= new CustomEvent("loggedOut", {});
+        var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwdOriginal(reason);
     }
     var quitpwd_untrustOriginal = quitpwd_untrust;
     quitpwd_untrust = function() {
-        var evt= new CustomEvent("loggedOut", {});
+        var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwd_untrustOriginal();
     }

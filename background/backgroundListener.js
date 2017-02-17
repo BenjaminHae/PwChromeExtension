@@ -84,8 +84,20 @@ function getLatestAction() {
 chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     //do something that only the extension has privileges here
     switch(myMessage["request"]){
-        case "session": receiveUserSession(myMessage["data"]); break;
-        case "logout":  cleanup(); break;
+	case "session": 
+	    if (session["url"].indexOf(host) != 0) {
+	        console.log("wrong host");
+      	        return;
+	    }
+	    receiveUserSession(myMessage["data"]); 
+	    break;
+        case "logout":  
+	    if (session["url"].indexOf(host) != 0) {
+	        console.log("wrong host");
+      	        return;
+	    }
+	    cleanup(); 
+	    break;
         case "actions": var action = getLatestAction();
                         if (action == null)
                             action = {"request": "none"};
