@@ -10,7 +10,7 @@ var salt2;
 var confkey;
 var username;
 var activeAccountIndex;
-var activeAccountUrl;//ToDo remove
+var activeAccountIndexForced;
 var error = "";
 
 var lastAction;
@@ -118,6 +118,10 @@ function cleanup(){
     console.log("Logged out");
 }
 
+function forceSelectAccount(index){
+    activeAccountIndexForced = index;
+}
+
 function isLoggedIn() {
     doneAction();
     return (secretkey != "") && (secretkey != null) && (accounts!= null);
@@ -133,6 +137,7 @@ function getPassword(account) {
     var key = decryptchar(account["enpassword"], secretkey);
     var conf = confkey;
     var sha512 = String(CryptoJS.SHA512(account["name"]));
+    activeAccountIndexForced = null;
     return get_orig_pwd(conf, salt2, sha512, default_letter_used, key);
 }
 
@@ -168,7 +173,6 @@ function getAccountsForDomain(domain) {
     }
     if (!markedActive ) {
         activeAccountIndex = null;
-        activeAccountUrl = null;
         if (bestFitIndex >= 0)
             result[bestFitIndex]["active"] = true;
     }
@@ -177,7 +181,6 @@ function getAccountsForDomain(domain) {
 
 function setActiveAccount(index, url) {
     activeAccountIndex = index;
-    activeAccountUrl = url;
 }
 
 loadSettings(function(){ timeOut(); });

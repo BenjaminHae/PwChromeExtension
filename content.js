@@ -100,11 +100,21 @@ executeScript(function(){
         var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwdOriginal(reason);
-    }
+    };
     var quitpwd_untrustOriginal = quitpwd_untrust;
     quitpwd_untrust = function() {
         var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwd_untrustOriginal();
-    }
+    };
+    registerPlugin("drawAccount",function(data){
+	    var account = data["account"];
+        var row = data["row"];
+		row.find(".namecell .cellOptionButton:last").before($('<a>')
+		    .attr('title',"Open")
+			.attr('class','cellOptionButton')
+			.attr('href',addHttps(account["other"]["url"])) 
+			.append($('<span></span>')
+			    .attr('class','glyphicon glyphicon-globe')));
+});
 },null);
