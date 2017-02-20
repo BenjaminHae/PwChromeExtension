@@ -85,14 +85,14 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     //do something that only the extension has privileges here
     switch(myMessage["request"]){
 	case "session": 
-	    if (session["url"].indexOf(host) != 0) {
+	    if (myMessage["data"]["url"].indexOf(host) != 0) {
 	        console.log("wrong host");
       	        return;
 	    }
 	    receiveUserSession(myMessage["data"]); 
 	    break;
         case "logout":  
-	    if (session["url"].indexOf(host) != 0) {
+	    if (myMessage["data"]["url"].indexOf(host) != 0) {
 	        console.log("wrong host");
       	        return;
 	    }
