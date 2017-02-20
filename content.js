@@ -16,6 +16,7 @@ document.addEventListener('loggedOut', function(e){
 }, false);
 document.addEventListener('selectedAccount', function(e){
     chrome.runtime.sendMessage({"request":"selectAccount", "data":e.detail.index}, function(response) {
+    });
 }, false);
 
 function executeScript(script,args) {
