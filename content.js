@@ -120,6 +120,7 @@ executeScript(function(){
             .on('click',{'index':account["index"]}, function(e){
                     var evt = new CustomEvent("selectedAccount", {"detail":{"index":e.data.index}});
                     document.dispatchEvent(evt);
+                    showMessage('success', 'This account is now selected in your browser addon.');
                 })
             .append($('<span></span>')
                 .attr('class','glyphicon glyphicon-share')));

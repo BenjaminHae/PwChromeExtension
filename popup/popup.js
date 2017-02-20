@@ -140,8 +140,17 @@ function showAvailableAccounts(accounts,url) {
         a.setAttribute("class", "list-group-item disabled");
         ul.appendChild(a);
     }
+    var search = document.createElement("a");
+    search.innerHTML = '<i class="glyphicon glyphicon-share list-glyph"></i><strong>Search All Accounts</strong>';
+    search.onclick = function(e) {
+        var actions = [];
+        actions.push({"action":"login", "data":null});
+        openWithAction(actions);
+    };
+    search.setAttribute("class", "list-group-item list-group-item-success");
+    ul.appendChild(search);
     var a = document.createElement("a");
-    a.innerHTML = '<i class="glyphicon glyphicon-plus"></i><strong>Add Account</strong>';
+    a.innerHTML = '<i class="glyphicon glyphicon-plus list-glyph"></i><strong>Add Account</strong>';
     a.onclick = function(e){
         var actions = [];
         actions.push({"action":"login", "data":null});
