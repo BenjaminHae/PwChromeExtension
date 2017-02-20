@@ -15,7 +15,7 @@ document.addEventListener('loggedOut', function(e){
     });
 }, false);
 document.addEventListener('selectedAccount', function(e){
-    chrome.runtime.sendMessage({"request":"selectAccount", "data":e.detail.index}, function(response) {
+    chrome.runtime.sendMessage({"request":"selectAccount", "data":{"index": e.detail.index}}, function(response) {
     });
 }, false);
 
@@ -117,8 +117,8 @@ executeScript(function(){
         row.find(".namecell .cellOptionButton:last").before($('<a>')
             .attr('title',"Select")
             .attr('class','cellOptionButton')
-            .on('click',{'index':account["index"]}, function(data){
-                    var evt= new CustomEvent("selectedAccount", {"detail":{"index":data.index}});
+            .on('click',{'index':account["index"]}, function(e){
+                    var evt = new CustomEvent("selectedAccount", {"detail":{"index":e.data.index}});
                     document.dispatchEvent(evt);
                 })
             .append($('<span></span>')

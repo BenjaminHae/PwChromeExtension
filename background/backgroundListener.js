@@ -84,20 +84,20 @@ function getLatestAction() {
 chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     //do something that only the extension has privileges here
     switch(myMessage["request"]){
-	case "session": 
-	    if (myMessage["data"]["url"].indexOf(host) != 0) {
-	        console.log("wrong host");
-      	        return;
-	    }
-	    receiveUserSession(myMessage["data"]); 
-	    break;
+        case "session": 
+            if (myMessage["data"]["url"].indexOf(host) != 0) {
+                console.log("wrong host");
+                return;
+            }
+            receiveUserSession(myMessage["data"]); 
+            break;
         case "logout":  
-	    if (myMessage["data"]["url"].indexOf(host) != 0) {
-	        console.log("wrong host");
-      	        return;
-	    }
-	    cleanup(); 
-	    break;
+            if (myMessage["data"]["url"].indexOf(host) != 0) {
+                console.log("wrong host");
+                return;
+            }
+            cleanup(); 
+            break;
         case "actions": var action = getLatestAction();
                         if (action == null)
                             action = {"request": "none"};
@@ -105,6 +105,7 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
                         break;
         case "host": sendResponse({"request":"host", "data":{"url":host}}); break;
         case "options": loadSettings(function(){ timeOut(); }); break;
+        case "selectAccount": forceSelectAccount(myMessage["data"]["index"]); break;
     }
     return true;
 });

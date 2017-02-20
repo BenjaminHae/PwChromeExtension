@@ -120,6 +120,7 @@ function cleanup(){
 
 function forceSelectAccount(index){
     activeAccountIndexForced = index;
+    activeAccountIndex = null;
 }
 
 function isLoggedIn() {
@@ -157,11 +158,17 @@ function getAccountsForDomain(domain) {
     var bestFitIndex = -1;
     var bestFitLength = 0;
     for (var item in accounts) {
-        var url = accounts[item]["url"];
-        if (url.length < 5)
+        var account = accounts[item];
+        var url = account["url"];
+        if (item == activeAccountIndexForced) {
+            markedActive = true;
+            account["active"] = true;
+            result.push(accounts[item]);
+        }
+        else if (url.length < 5) {
             continue;
-        if (domain.indexOf(url) >= 0) {
-            var account = accounts[item];
+        }
+        else if (domain.indexOf(url) >= 0) {
             account["active"] = item == activeAccountIndex;
             markedActive = account["active"] || markedActive;
             if (url.length > bestFitLength) {
@@ -181,6 +188,7 @@ function getAccountsForDomain(domain) {
 
 function setActiveAccount(index, url) {
     activeAccountIndex = index;
+    activeAccountIndexForced = null;
 }
 
 loadSettings(function(){ timeOut(); });

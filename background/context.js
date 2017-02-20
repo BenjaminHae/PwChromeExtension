@@ -22,10 +22,6 @@ function getDomainFromUrl(url) {
 }
 
 function getAccount(url){
-    if (activeAccountIndexForced != null){
-        doneAction(); 
-	return accounts[activeAccountIndexForced];
-    }
     domain = getDomainFromUrl(url);
     return getAccountForDomain(url);//ToDo, bug? url != Domain
 }
