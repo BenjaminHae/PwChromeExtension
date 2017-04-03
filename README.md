@@ -11,8 +11,9 @@ Installation
 ------------
 
 + Install [Password-Manager](https://github.com/zeruniverse/Password-Manager).
-+ Download the current version of the addon from [releases](https://github.com/BenjaminHae/PwChromeExtension/releases) and install it in your browser. For Chrome, you have to download the file and drag it into the addon manager.
-+ Click the new icon and input the url of your Password-Manager instance.
++ In Chrome: Install from [Chrome Web Store](https://chrome.google.com/webstore/detail/password-manager/mbfjokpccbakbnnpklkcginkalkijkan).
++ Firefox: Download the current version of the addon from [releases](https://github.com/BenjaminHae/PwChromeExtension/releases) and install it in your browser.
++ Click the now new icon and input the url of your Password-Manager instance.
 
 Usage
 ----- 
