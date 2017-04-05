@@ -167,7 +167,7 @@ function openWithAction(actions) {
         sendBackgroundRequest("setAction", action);
         action = actions.shift();
     }
-    chrome.tabs.create({url:host});
+    chrome.tabs.create({url:host+"password.php"});
 }
 
 function clickLogin() {
