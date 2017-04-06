@@ -115,7 +115,7 @@ executeScript(function(){
         var account = data["account"];
         var row = data["row"];
         row.find(".namecell .cellOptionButton:last").before($('<a>')
-            .attr('title',"Select")
+            .attr('title',"Select account for usage with addon")
             .attr('class','cellOptionButton')
             .on('click',{'index':account["index"]}, function(e){
                     var evt = new CustomEvent("selectedAccount", {"detail":{"index":e.data.index}});
