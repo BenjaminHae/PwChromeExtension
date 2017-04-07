@@ -15,8 +15,10 @@ document.addEventListener('loggedOut', function(e){
     });
 }, false);
 document.addEventListener('selectedAccount', function(e){
-    chrome.runtime.sendMessage({"request":"selectAccount", "data":{"index": e.detail.index}}, function(response) {
-    });
+    if (pwAddonHost) {
+        chrome.runtime.sendMessage({"request":"selectAccount", "data":{"index": e.detail.index}}, function(response) {
+        });
+    }
 }, false);
 
 function executeScript(script,args) {
