@@ -63,7 +63,12 @@ function InsertUsernameAndPasswordAndSignin(url){
             form = input.closest("form");
             passwd = form.querySelectorAll("input[type=password]")[0];
             passwd.value = args["passwd"];
-            form.submit();
+
+            //Hack to prevent issues with forms containing <input name="submit"
+            //See https://stackoverflow.com/a/41846503/3592375
+            var submitFormFunction = Object.getPrototypeOf(form).submit;
+            submitFormFunction.call(form);
+
         }, { 'user':account["username"], 'passwd':getPassword(account)});
     }
     else {
