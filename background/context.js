@@ -6,13 +6,13 @@ function genericOnClick(info, tab) {
         case contextEntries["show"]: break;
         case contextEntries["login"]: break;
         case contextEntries["user"]: 
-                                      InsertUsername(tab.url);
+                                      InsertUsername(tab.url, frameId);
                                       break;
         case contextEntries["password"]: 
-                                      InsertPassword(tab.url);
+                                      InsertPassword(tab.url, frameId);
                                       break;
         case contextEntries["signin"]: 
-                                      InsertUsernameAndPasswordAndSignin(tab.url);
+                                      InsertUsernameAndPasswordAndSignin(tab.url, frameId);
                                       break;
     }
 }
@@ -27,35 +27,35 @@ function getAccount(url){
     return getAccountForDomain(url);//ToDo, bug? url != Domain
 }
 
-function InsertUsername(url){
+function InsertUsername(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
-        insertTextIntoSelectedInput(account["username"]);
+        insertTextIntoSelectedInput(account["username"], frameId);
     }
     else {
         if (!isLoggedIn()) {
             chrome.tabs.create({url:host});
-            insertTextIntoSelectedInput("not logged in");
+            insertTextIntoSelectedInput("not logged in", frameId);
         }
         else
-            insertTextIntoSelectedInput("no account found");
+            insertTextIntoSelectedInput("no account found", frameId);
     }
 }
 
-function InsertPassword(url){
+function InsertPassword(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
-        insertTextIntoSelectedInput(getPassword(account));
+        insertTextIntoSelectedInput(getPassword(account), frameId);
     }
     else {
         if (!isLoggedIn()) {
             chrome.tabs.create({url:host});
         }
-        insertTextIntoSelectedInput("");
+        insertTextIntoSelectedInput("", frameId);
     }
 }
 
-function InsertUsernameAndPasswordAndSignin(url){
+function InsertUsernameAndPasswordAndSignin(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
         executeScript(function (args) {
@@ -70,15 +70,15 @@ function InsertUsernameAndPasswordAndSignin(url){
             var submitFormFunction = Object.getPrototypeOf(form).submit;
             submitFormFunction.call(form);
 
-        }, { 'user':account["username"], 'passwd':getPassword(account)});
+        }, { 'user':account["username"], 'passwd':getPassword(account)}, frameId);
     }
     else {
         if (!isLoggedIn()) {
             chrome.tabs.create({url:host});
-            insertTextIntoSelectedInput("not logged in");
+            insertTextIntoSelectedInput("not logged in", frameId);
         }
         else
-            insertTextIntoSelectedInput("no account found");
+            insertTextIntoSelectedInput("no account found", frameId);
     }
 }
 
