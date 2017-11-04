@@ -50,34 +50,31 @@ document.addEventListener('DOMContentLoaded', function() {
 function showLoggedIn(loggedIn) {
     var text;
     var cls="btn";
-    button = document.getElementById('logInButton');
+    var button = document.getElementById('logInButton');
+    var openButton = document.getElementById('openManager');
     document.getElementById('options').onclick = function(e) { showOptions(); };
     if (loggedIn["status"]) {
         var textnode = document.createTextNode("Logged in as ");
         var user = document.createElement("span");
         user.setAttribute("id","user");
         user.textContent = loggedIn["username"];
-        var link = document.createElement("a");
-        link.setAttribute("class", "glyphicon glyphicon-eye-open");
-        link.setAttribute("id", "openManager");
-        link.setAttribute("href", "#");
-        link.onclick = function(e) {
+        openButton.onclick = function(e) {
             var actions = [];
             actions.push({"action":"login", "data":null});
             openWithAction(actions);
         };
-        user.appendChild(link);
-        document.getElementById("loggedIn").appendChild(button);
-        document.getElementById("loggedIn").appendChild(textnode);
-        document.getElementById("loggedIn").appendChild(user);
+        openButton.setAttribute("class", "btn btn-success");
+        document.getElementById("status").appendChild(textnode);
+        document.getElementById("status").appendChild(user);
         text = "Logout";
-        cls += " btn-danger";
+        cls += " btn-info";
         button.onclick = function(e) {
             var actions = [];
-            actions.push({"action":"login", "data":null});
-            actions.push({"action":"logout", "data":null});
+            actions.push({"action":"login", "data":null});// first open current session
+            actions.push({"action":"logout", "data":null});// then do a logout of this session
             openWithAction(actions);
         };
+        button.getElementsByTagName("span")[0].setAttribute("class","glyphicon glyphicon-log-out");
     }
     else {
         var error = loggedIn["error"];
@@ -97,7 +94,7 @@ function showLoggedIn(loggedIn) {
         document.getElementById('accounts').setAttribute("class", "hidden");
         button.onclick = function(e) { clickLogin(); };
     }
-    button.textContent = text;
+    button.setAttribute("title", text);
     button.setAttribute("class", cls);
 }
 
