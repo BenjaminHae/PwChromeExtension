@@ -14,7 +14,7 @@
         "default_icon": "iconLoggedOut.png",
         "default_popup": "popup/popup.html"
     },
-    "content_scripts":[{"matches":["*://*/*"], "js":["content.js"], "run_at":"document_end"}],
+    "content_scripts":[{"matches":["*://*/*"], "js":["content.js"], "run_at":"document_end", "all_frames": true}],
     "background": {
         "scripts": ["background/context.js",
             "background/activeTabAction.js",

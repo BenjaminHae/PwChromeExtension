@@ -82,7 +82,7 @@ getActions();
 executeScript(function(){
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
         return;
-    //ToDo: checkUrl here 
+    // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" instead
     document.addEventListener('actionsReceived', function(e){
             actionsReceived = true;
             if (dataAvailable != false)
@@ -98,21 +98,33 @@ executeScript(function(){
         }
         dataAvailable = false;
         dataReadyOriginal(data);
-        var evt= new CustomEvent("secretKeyReady", {'detail':{'secretkey': secretkey, 'secretkey0': getpwdstore(salt2), 'session_token': localStorage.session_token, 'confkey': getconfkey(salt2), 'username':getcookie('username'), 'url':window.location.href }});
+        var evt= new CustomEvent("secretKeyReady", 
+            {'detail':{
+                'secretkey': secretkey, 
+                'secretkey0': getpwdstore(salt2), 
+                'session_token': localStorage.session_token, 
+                'confkey': getconfkey(salt2), 
+                'username':getcookie('username'), 
+                'url':window.location.href }
+            });
         document.dispatchEvent(evt);
     };
+    // Clear Plugin on Logout 1
     var quitpwdOriginal = quitpwd;
     quitpwd = function(reason) {
         var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwdOriginal(reason);
     };
+    // Clear Plugin on Logout 2
     var quitpwd_untrustOriginal = quitpwd_untrust;
     quitpwd_untrust = function() {
         var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwd_untrustOriginal();
     };
+
+    // Add a symbol to select an account from the password manager in the addon
     registerPlugin("drawAccount",function(data){
         var account = data["account"];
         var row = data["row"];

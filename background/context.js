@@ -1,5 +1,6 @@
 // handle click on context menu item
 function genericOnClick(info, tab) {
+    var frameId = info["frameId"];
     switch (info.menuItemId) {
         case contextEntries["add"]: break;
         case contextEntries["show"]: break;
