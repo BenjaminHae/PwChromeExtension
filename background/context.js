@@ -61,11 +61,11 @@ function InsertUsernameAndPasswordAndSignin(url, frameId = 0){
         executeScript(function (args) {
             var input = document.activeElement;
             input.value = args["user"];
-            input.onchange();
+            input.dispatchEvent(new Event('change'));
             form = input.closest("form");
             passwd = form.querySelectorAll("input[type=password]")[0];
             passwd.value = args["passwd"];
-            passwd.onchange();
+            passwd.dispatchEvent(new Event('change'));
 
             //Hack to prevent issues with forms containing <input name="submit"
             //See https://stackoverflow.com/a/41846503/3592375

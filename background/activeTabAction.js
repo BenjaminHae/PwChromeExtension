@@ -3,7 +3,7 @@ function insertTextIntoSelectedInput(text, frameId = 0) {
     executeScript(function (text) {
         var input = document.activeElement;
         input.value = text;
-        input.onChange();
+        input.dispatchEvent(new Event('change'));
     }, text, frameId);
 }
 
