@@ -23,10 +23,10 @@ document.addEventListener('selectedAccount', function(e){
 
 function executeScript(script,args) {
     var payload = '(' + script + ')('+JSON.stringify(args)+');';
-var script = document.createElement('script');
-script.textContent = payload;
-(document.head||document.documentElement).appendChild(script);
-script.remove();
+    var script = document.createElement('script');
+    script.textContent = payload;
+    (document.head||document.documentElement).appendChild(script);
+    script.remove();
 }
 
 function getActions() {
@@ -84,10 +84,10 @@ executeScript(function(){
         return;
     // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" instead
     document.addEventListener('actionsReceived', function(e){
-            actionsReceived = true;
-            if (dataAvailable != false)
-                dataReady(dataAvailable);
-        });
+        actionsReceived = true;
+        if (dataAvailable != false)
+            dataReady(dataAvailable);
+    });
     var actionsReceived = false;
     var dataAvailable = false;
     var dataReadyOriginal = dataReady; 
@@ -132,10 +132,10 @@ executeScript(function(){
             .attr('title',"Select account for usage with addon")
             .attr('class','cellOptionButton')
             .on('click',{'index':account["index"]}, function(e){
-                    var evt = new CustomEvent("selectedAccount", {"detail":{"index":e.data.index}});
-                    document.dispatchEvent(evt);
-                    showMessage('success', 'This account is now selected in your browser addon.');
-                })
+                var evt = new CustomEvent("selectedAccount", {"detail":{"index":e.data.index}});
+                document.dispatchEvent(evt);
+                showMessage('success', 'This account is now selected in your browser addon.');
+            })
             .append($('<span></span>')
                 .attr('class','glyphicon glyphicon-share')));
     });
