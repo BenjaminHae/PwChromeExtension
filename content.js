@@ -32,7 +32,7 @@ function executeScript(script,args) {
 function getActions() {
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
         if (!pwAddonHost) {//check if this is really the right url before sending any confidential data
-            var evt= new CustomEvent("actionsReceived", null);
+            var evt = new CustomEvent("actionsReceived", null);
             document.dispatchEvent(evt);
             return;
         }
@@ -72,7 +72,7 @@ function getActions() {
                 break;
             case "none": break;
         }
-        var evt= new CustomEvent("actionsReceived", null);
+        var evt = new CustomEvent("actionsReceived", null);
         document.dispatchEvent(evt);
     });
 }
@@ -80,7 +80,7 @@ function getActions() {
 getActions();
 
 executeScript(function(){
-    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
         return;
     // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" instead
     document.addEventListener('actionsReceived', function(e){
@@ -98,7 +98,7 @@ executeScript(function(){
         }
         dataAvailable = false;
         dataReadyOriginal(data);
-        var evt= new CustomEvent("secretKeyReady", 
+        var evt = new CustomEvent("secretKeyReady", 
             {'detail':{
                 'secretkey': secretkey, 
                 'secretkey0': getpwdstore(salt2), 
@@ -112,14 +112,14 @@ executeScript(function(){
     // Clear Plugin on Logout 1
     var quitpwdOriginal = quitpwd;
     quitpwd = function(reason) {
-        var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
+        var evt = new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwdOriginal(reason);
     };
     // Clear Plugin on Logout 2
     var quitpwd_untrustOriginal = quitpwd_untrust;
     quitpwd_untrust = function() {
-        var evt= new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
+        var evt = new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
         document.dispatchEvent(evt);
         quitpwd_untrustOriginal();
     };
