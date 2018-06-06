@@ -16,7 +16,13 @@
     },
     "content_scripts":[{"matches":["*://*/*"], "js":["content.js"], "run_at":"document_end", "all_frames": true}],
     "background": {
-        "scripts": ["background/context.js",
+        "scripts": [
+            "ext/jquery.min.js",
+            "ext/commonFunctions.js",
+            "ext/cryptoWrapper.js",
+            "ext/account.js",
+            "ext/backend.js",
+            "background/context.js",
             "background/activeTabAction.js",
             "background/backgroundListener.js",
             "background/hostCommunication.js",
