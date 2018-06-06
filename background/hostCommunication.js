@@ -1,13 +1,7 @@
 var host = "";
 var accounts;
+var backend;
 var data;
-var secretkey;
-var secretkey0;
-var default_letter_used;
-var default_length;
-var salt1;
-var salt2;
-var confkey;
 var username;
 var activeAccountIndex;
 var activeAccountIndexForced;
@@ -15,6 +9,9 @@ var error = "";
 
 var lastAction;
 var inactiveTimeout = 10 * 60 * 1000;
+
+// Dummy function to make backend.js work
+function callPlugins() { }
 
 function timeOut() {
     if (lastAction==null) {
@@ -55,10 +52,6 @@ function readData(data0) {
         cleanup();
         return;
     }
-    default_letter_used = data["default_letter_used"];
-    default_length = data["default_length"];
-    salt1 = data["global_salt_1"];
-    salt2 = data["global_salt_2"];
     accounts = null;
     //Read Accounts if available
     if (secretkey != "")
@@ -83,17 +76,21 @@ function receiveUserSession(session) {
     error = "";
     doneAction();
     console.log("Received session");
-    secretkeyNew = session["secretkey"];
-    secretkey0=session["secretkey0"];
-    if (secretkeyNew != ""){
-        secretkey = secretkeyNew;
-        confkey = session["confkey"];
-        username = session["username"];
-        getAccounts(session["session_token"]);
-        doneAction();
-        return;
-    }
-    secretkey = "";
+    var cryptoData = JSON.parse(session["encryptionWrapper"]);
+    var encryptionWrapper = new EncryptionWrapper(cryptoData["secretkey"], cryptoData["jsSalt"], cryptoData["pwSalt"], cryptoData["alphabet"]);
+
+    backend = new AccountBackend();
+    backend._sessionToken = session["sessionToken"];
+    backend.domain = host;
+    backend.encryptionWrapper = encryptionWrapper;
+    backend.loadAccounts()
+        .then(function(){
+            console.log(backend);
+            doneAction();
+        })
+        .catch(function() {
+            encryptionWrapper = null;
+        });
 }
 
 function cleanup(){
