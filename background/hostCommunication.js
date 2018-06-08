@@ -30,66 +30,31 @@ function doneAction() {
     lastAction = Date.now();
 }
 
-function getAccounts(session_token) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            readData(JSON.parse(this.responseText));
-        }
-    };
-    xhttp.open("POST", host + "rest/password.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-    xhttp.send("session_token="+session_token);
-}
-
-function readData(data0) {
-    console.log("Received Data");
-    doneAction();
-    data = data0;
-    if (data["status"] != "success") {
-        error = "Server Error: " + data["message"];
-        console.log(error);
-        cleanup();
-        return;
-    }
-    accounts = null;
-    //Read Accounts if available
-    if (secretkey != "")
-        readPasswords();
-}
-
-function readPasswords()
-{
-    accounts = [];
-    accountArray = data["accounts"];
-    for (var i = 0; i < accountArray.length; i++) {
-        var account = accountArray[i];
-        var index = account["index"];
-        var other = JSON.parse(decryptchar(String(account["additional"]),secretkey));
-        accounts[index]  = { "index":index, "name":decryptchar(account["name"], secretkey), "url":other["url"], "username":other["user"], "enpassword": account["kss"]};
-    }
-    chrome.browserAction.setIcon({ path: "iconLoggedIn.png" });
-    console.log("Decrypted Accounts");
-}
-
 function receiveUserSession(session) {
     error = "";
     doneAction();
     console.log("Received session");
     var cryptoData = JSON.parse(session["encryptionWrapper"]);
     var encryptionWrapper = new EncryptionWrapper(cryptoData["secretkey"], cryptoData["jsSalt"], cryptoData["pwSalt"], cryptoData["alphabet"]);
+    encryptionWrapper._confkey = cryptoData["_confkey"];
 
     backend = new AccountBackend();
     backend._sessionToken = session["sessionToken"];
     backend.domain = host;
     backend.encryptionWrapper = encryptionWrapper;
-    backend.loadAccounts()
+    return backend.loadAccounts()
         .then(function(){
-            console.log(backend);
             doneAction();
+            chrome.browserAction.setIcon({ path: "iconLoggedIn.png" });
+            console.log("Decrypted Accounts");
         })
-        .catch(function() {
-            encryptionWrapper = null;
+        .catch(function(msg) {
+            console.log("Error while getting accounts");
+            console.log(msg);
+            backend.encryptionWrapper = null;
+            backend = null;
+            chrome.browserAction.setIcon({ path: "iconLoggedOut.png" });
+            throw msg;
         });
 }
 
@@ -103,11 +68,6 @@ function cleanup(){
         accounts = null;
     }
     data = null;
-    secretkey = null;
-    default_letter_used = null;
-    default_length = null;
-	salt1 = null;
-	salt2 = null;
 	confkey = null;
 	username = null;
     lastAction = null;
@@ -122,7 +82,7 @@ function forceSelectAccount(index){
 
 function isLoggedIn() {
     doneAction();
-    return (secretkey != "") && (secretkey != null) && (accounts!= null);
+    return (backend != null) && (backend.encryptionWrapper != null) && (backend.accounts.length > 0);
 }
 
 function getUsername() {
@@ -132,11 +92,8 @@ function getUsername() {
 
 function getPassword(account) {
     doneAction();
-    var key = decryptchar(account["enpassword"], secretkey);
-    var conf = confkey;
-    var sha512 = String(CryptoJS.SHA512(account["name"]));
     activeAccountIndexForced = null;
-    return get_orig_pwd(conf, salt2, sha512, default_letter_used, key);
+    return account.getPassword();
 }
 
 function getAccountForDomain(domain) {
@@ -154,9 +111,9 @@ function getAccountsForDomain(domain) {
     var markedActive = false;
     var bestFitIndex = -1;
     var bestFitLength = 0;
-    for (var item in accounts) {
-        var account = accounts[item];
-        var url = account["url"];
+    for (var item in backend.accounts) {
+        var account = backend.accounts[item];
+        var url = account["other"]["url"];
         if (item == activeAccountIndexForced) {
             markedActive = true;
             account["active"] = true;
