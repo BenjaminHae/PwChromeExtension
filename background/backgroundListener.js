@@ -32,7 +32,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 var send = [];
                 for (item in accounts){
                     var account = accounts[item];
-                    send.push({"index":account["index"], "active": account["active"], "name":account["name"], "username":account["username"]});
+                    send.push({"index":account["index"], "active": account["active"], "name":account["name"], "username":account["other"]["user"]});
                 }
                 sendPopupRequest('AvailableAccounts', {'accounts':send, 'url':request["data"]["url"]}); 
                 break;
