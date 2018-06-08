@@ -11,13 +11,12 @@ document.addEventListener('secretKeyReady', function(e) {
 
 document.addEventListener('loggedOut', function(e) {
     //log addon out
-    chrome.runtime.sendMessage({"request":"logout", "data":{"url": e.detail.url}}, function(response) {
+    chrome.runtime.sendMessage({"request": "logout", "data": {"url": e.detail.url}}, function(response) {
     });
 }, false);
 document.addEventListener('selectedAccount', function(e) {
     if (pwAddonHost) {
-        chrome.runtime.sendMessage({"request":"selectAccount", "data":{"index": e.detail.index}}, function(response) {
-        });
+        chrome.runtime.sendMessage({"request": "selectAccount", "data": {"index": e.detail.index}}, function(response) { });
     }
 }, false);
 
