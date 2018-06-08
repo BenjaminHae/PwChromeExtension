@@ -96,15 +96,20 @@ executeScript(function() {
             return;
         }
         dataAvailable = false;
-        var evt = new CustomEvent("secretKeyReady", {
-            'detail': {
-                'encryptionWrapper': JSON.stringify(backend.encryptionWrapper),
-                'username': backend.user, 
-                'sessionToken': backend.sessionToken,
-                'url': window.location.href 
-            }
-        });
-        document.dispatchEvent(evt);
+        backend.encryptionWrapper.getConfkey()
+            .then(function(confkey) {
+                //getConfkey only get's called to explicitly set the confkey in encryptionWrapper._confkey,
+                // so it's contained in the encryptionWrapper JSON
+                var evt = new CustomEvent("secretKeyReady", {
+                    'detail': {
+                        'encryptionWrapper': JSON.stringify(backend.encryptionWrapper),
+                        'username': backend.user, 
+                        'sessionToken': backend.sessionToken,
+                        'url': window.location.href 
+                    }
+                });
+                document.dispatchEvent(evt);
+            });
     });
 //    // Clear Plugin on Logout 1
 //    var quitpwdOriginal = quitpwd;
