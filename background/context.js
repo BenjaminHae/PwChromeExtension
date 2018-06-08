@@ -30,7 +30,7 @@ function getAccount(url){
 function InsertUsername(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
-        insertTextIntoSelectedInput(account["username"], frameId);
+        insertTextIntoSelectedInput(account["other"]["user"], frameId);
     }
     else {
         if (!isLoggedIn()) {
@@ -45,7 +45,10 @@ function InsertUsername(url, frameId = 0){
 function InsertPassword(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
-        insertTextIntoSelectedInput(getPassword(account), frameId);
+        account.getPassword()
+            .then(function(password) {
+                insertTextIntoSelectedInput(password, frameId);
+            });
     }
     else {
         if (!isLoggedIn()) {
@@ -58,25 +61,28 @@ function InsertPassword(url, frameId = 0){
 function InsertUsernameAndPasswordAndSignin(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
-        executeScript(function (args) {
-            var input = document.activeElement;
-            input.value = args["user"];
-            input.dispatchEvent(new Event('change'));
-            form = input.closest("form");
-            passwd = form.querySelectorAll("input[type=password]")[0];
-            passwd.value = args["passwd"];
-            passwd.dispatchEvent(new Event('change'));
+        account.getPassword()
+            .then(function(password) {
+                executeScript(function(args) {
+                    var input = document.activeElement;
+                    input.value = args["user"];
+                    input.dispatchEvent(new Event('change'));
+                    form = input.closest("form");
+                    passwd = form.querySelectorAll("input[type=password]")[0];
+                    passwd.value = args["passwd"];
+                    passwd.dispatchEvent(new Event('change'));
 
-            //Hack to prevent issues with forms containing <input name="submit"
-            //See https://stackoverflow.com/a/41846503/3592375
-            var submitFormFunction = Object.getPrototypeOf(form).submit;
-            submitFormFunction.call(form);
+                    //Hack to prevent issues with forms containing <input name="submit"
+                    //See https://stackoverflow.com/a/41846503/3592375
+                    var submitFormFunction = Object.getPrototypeOf(form).submit;
+                    submitFormFunction.call(form);
 
-        }, { 'user':account["username"], 'passwd':getPassword(account)}, frameId);
+                }, { 'user': account["other"]["user"], 'passwd': password}, frameId);
+            });
     }
     else {
         if (!isLoggedIn()) {
-            chrome.tabs.create({url:host});
+            chrome.tabs.create({url: host});
             insertTextIntoSelectedInput("not logged in", frameId);
         }
         else
