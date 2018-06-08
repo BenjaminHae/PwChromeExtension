@@ -45,7 +45,7 @@ function InsertUsername(url, frameId = 0){
 function InsertPassword(url, frameId = 0){
     account = getAccount(url);
     if (account != null) {
-        account.getPassword()
+        getPassword(account)
             .then(function(password) {
                 insertTextIntoSelectedInput(password, frameId);
             });

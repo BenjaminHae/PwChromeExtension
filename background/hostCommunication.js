@@ -38,6 +38,7 @@ function receiveUserSession(session) {
     var encryptionWrapper = new EncryptionWrapper(cryptoData["secretkey"], cryptoData["jsSalt"], cryptoData["pwSalt"], cryptoData["alphabet"]);
     encryptionWrapper._confkey = cryptoData["_confkey"];
 
+    username = session["username"];
     backend = new AccountBackend();
     backend._sessionToken = session["sessionToken"];
     backend.domain = host;
@@ -117,7 +118,7 @@ function getAccountsForDomain(domain) {
         if (item == activeAccountIndexForced) {
             markedActive = true;
             account["active"] = true;
-            result.push(accounts[item]);
+            result.push(account);
         }
         else if (url.length < 5) {
             continue;
