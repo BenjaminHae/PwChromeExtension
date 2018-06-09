@@ -15,7 +15,9 @@ chrome.runtime.onConnect.addListener(function(port) {
             port.postMessage(JSON.stringify({'request':request, 'data':data}));
         }
         switch(request["request"]){
-            case "Host": sendPopupRequest('Host', {'url':host}); break;
+            case "Host": 
+                sendPopupRequest('Host', {'url':host}); 
+                break;
             case "LoggedIn": 
                 var loggedIn = isLoggedIn();
                 var data={'status':loggedIn};
@@ -63,7 +65,7 @@ function loadSettings(callback) {
 
 function setAction(action, data){
     switch (action) {
-        case "login": data = {"sk":secretkey0, "confKey":encryptchar(confkey,salt2), "salt":salt2}; 
+        case "login": data = {"encryptionWrapper": JSON.stringify(backend.encryptionWrapper)}; 
                       break;
         //in all other cases no modification is necessary
     }
