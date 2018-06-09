@@ -1,6 +1,9 @@
 var pwAddonHost = false;
 chrome.runtime.sendMessage({"request":"host"}, function(response) {
     pwAddonHost = document.location.href.startsWith(response["data"]["url"] + 'password.php');
+    if (pwAddonHost) {
+        getActions();
+    }
 });
 document.addEventListener('secretKeyReady', function(e) {
     //send secretKey to Addon
@@ -31,6 +34,7 @@ function executeScript(script, args) {
 function getActions() {
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
         if (!pwAddonHost) {//check if this is really the right url before sending any confidential data
+            // return actions to still make other PWmanager instances work
             var evt = new CustomEvent("actionsReceived", null);
             document.dispatchEvent(evt);
             return;
@@ -40,30 +44,33 @@ function getActions() {
             case "login":
                 //data contains secretkey. It must be set using executeScript
                 executeScript(function(data) {
-                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
                         return;
                     console.log('logging in');
-                    var salt = data["salt"];
-                    setpwdstore(data["sk"], decryptchar(data["confKey"], salt), salt);
-                }, {'sk': request["data"]["sk"], 'confKey': request["data"]["confKey"], "salt":request["data"]["salt"]});
+
+                    var cryptoData = JSON.parse(data["encryptionWrapper"]);
+                    window.encryptionWrapper = new EncryptionWrapper(cryptoData["secretkey"], cryptoData["jsSalt"], cryptoData["pwSalt"], cryptoData["alphabet"]);
+                    window.encryptionWrapper._confkey = cryptoData["_confkey"];
+                    //actionsReceived = true;
+                }, {'encryptionWrapper': request["data"]["encryptionWrapper"]});
                 break;
             case "logout":
                 executeScript(function(data) {
-                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
                         return;
                     quitpwd();
                 }, null);
                 break;
             case "edit":
                 executeScript(function(data) {
-                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
                         return;
                     edit(data["index"]);
                 }, {'index': request["data"]});
                 break;
             case "addAccount":
                 executeScript(function(data) {
-                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "21688ab4-8e22-43b0-a988-2ca2c98e5796")
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
                         return;
                     $('#add').modal('show');
                     $("#newiteminputurl").val(data["url"]);
@@ -75,8 +82,6 @@ function getActions() {
         document.dispatchEvent(evt);
     });
 }
-//ToDo: only execute when necessary
-getActions();
 
 executeScript(function() {
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
@@ -84,17 +89,34 @@ executeScript(function() {
     // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" instead
     document.addEventListener('actionsReceived', function(e) {
         actionsReceived = true;
-        if (dataAvailable != false)
-            dataReady(dataAvailable);
     });
     var actionsReceived = false;
-    var dataAvailable = false;
+    window.encryptionWrapper = null;
+    registerPlugin("preDataReady", function() {
+        return new Promise((resolve, reject) => {
+            if (actionsReceived) {
+                resolve();
+            }
+            var maxChecks = 100;
+            const timeOutLength = 30;
+            function checkActionsReceived() {
+                if (actionsReceived) {
+                    if (window.encryptionWrapper) {
+                        backend.encryptionWrapper = window.encryptionWrapper;
+                    }
+                    resolve();
+                }
+                else {
+                    maxChecks -= 1;
+                    if (maxChecks > 0) {
+                        setTimeout(checkActionsReceived, timeOutLength);
+                    }
+                }
+            }
+            setTimeout(checkActionsReceived, timeOutLength);
+        });
+    });
     registerPlugin("accountsReady", function() {
-        if (!actionsReceived) {
-            dataAvailable = data;
-            return;
-        }
-        dataAvailable = false;
         backend.encryptionWrapper.getConfkey()
             .then(function(confkey) {
                 //getConfkey only get's called to explicitly set the confkey in encryptionWrapper._confkey,
