@@ -58,7 +58,7 @@ function getActions() {
                 executeScript(function(data) {
                     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
                         return;
-                    quitpwd();
+                    backend.logout();
                 }, null);
                 break;
             case "edit":
@@ -132,20 +132,10 @@ executeScript(function() {
                 document.dispatchEvent(evt);
             });
     });
-//    // Clear Plugin on Logout 1
-//    var quitpwdOriginal = quitpwd;
-//    quitpwd = function(reason) {
-//        var evt = new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
-//        document.dispatchEvent(evt);
-//        quitpwdOriginal(reason);
-//    };
-//    // Clear Plugin on Logout 2
-//    var quitpwd_untrustOriginal = quitpwd_untrust;
-//    quitpwd_untrust = function() {
-//        var evt = new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
-//        document.dispatchEvent(evt);
-//        quitpwd_untrustOriginal();
-//    };
+    registerPlugin("preLogout", function() {
+        var evt = new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
+        document.dispatchEvent(evt);
+    });
 
     // Add a symbol to select an account from the password manager in the addon
     registerPlugin("drawAccount", function(data) {
