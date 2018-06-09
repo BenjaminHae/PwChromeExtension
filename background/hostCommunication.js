@@ -1,7 +1,6 @@
 var host = "";
 var accounts;
 var backend;
-var data;
 var username;
 var activeAccountIndex;
 var activeAccountIndexForced;
@@ -55,21 +54,19 @@ function receiveUserSession(session) {
             backend.encryptionWrapper = null;
             backend = null;
             chrome.browserAction.setIcon({ path: "iconLoggedOut.png" });
-            throw msg;
+            error = msg;
         });
 }
 
 function cleanup(){
-    for (item in accounts){
-        for (value in accounts[item])
-            accounts[item][value] = null;
+    for (item in backend.encryptionWrapper) {
+        backend.encryptionWrapper[item] = null;
     }
-    if (accounts!= null) {
-        accounts.length = 0;
-        accounts = null;
+    backend.encryptionWrapper = null;
+    for (account in backend.accounts) {
+        backend.accounts[account] = null;
     }
-    data = null;
-	confkey = null;
+    backend = null;
 	username = null;
     lastAction = null;
     chrome.browserAction.setIcon({ path: "iconLoggedOut.png" });
