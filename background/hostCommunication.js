@@ -10,7 +10,7 @@ var lastAction;
 var inactiveTimeout = 10 * 60 * 1000;
 
 // Dummy function to make backend.js work
-function callPlugins() { }
+function callPlugins() { return Promise.resolve(); }
 
 function timeOut() {
     if (lastAction==null) {
