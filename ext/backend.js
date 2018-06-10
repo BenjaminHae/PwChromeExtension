@@ -64,6 +64,7 @@ let AuthenticatedSession = (superclass) => class extends superclass {
         var self = this;
         //Todo raise event
         sessionStorage.clear();
+        callPlugins("preLogout", {});
         return self.doPost("logout", {})
             .then(function(){
                 self.callEvent("logout", {reason: reason});
@@ -103,19 +104,29 @@ let Timeout = (superclass) => class extends superclass {
     countdown() {
         if (this.isTimeout) {
             this.logout("Logged out due to inactivity");
+            this.clearTimeout();
         }
     }
     sessionCountdown() {
         var ck = getCookie("ServerRenew");
         if(ck == '1') // Reset timer
             this.server_timeout  = this.default_server_timeout+Math.floor(Date.now() / 1000);
-        if(ck == "-1" || this.server_timeout < Math.floor(Date.now() / 1000)) // Timer has expired
+        if(ck == "-1" || this.server_timeout < Math.floor(Date.now() / 1000)) { // Timer has expired
             this.logout("Session timed out");
+            this.clearTimeout();
+        }
         setCookie("ServerRenew", '0');// nothing happened
     }
     initTimeout() {
-        setInterval(this.countdown.bind(this), 5000);
-        setInterval(this.sessionCountdown.bind(this), 5000);
+        this.countdownInterval = setInterval(this.countdown.bind(this), 5000);
+        this.sessionCountdownInterval = setInterval(this.sessionCountdown.bind(this), 5000);
+    }
+    clearTimeout() {
+        clearInterval(this.sessionCountdownInterval);
+        this.sessionCountdownInterval = -1;
+        clearInterval(this.countdownInterval);
+        this.countdownInterval = -1;
+
     }
     // extended timeout for actions that take a long time
     extendedTimeout() {
@@ -259,6 +270,8 @@ class AccountBackend extends mix(commonBackend).with(EventHandler, Authenticated
         this.cleanUp();
         this.events = ["logout"];
         this.initEvents();
+        this.countdownInterval = null;
+        this.sessionCountdownInterval = null;
     }
     cleanUp(){
         this.accounts = [];
@@ -266,7 +279,10 @@ class AccountBackend extends mix(commonBackend).with(EventHandler, Authenticated
     }
     loadAccounts() {
         var self = this;
-        return self.doPost("password", {})
+        return callPlugins("preDataReady", {})
+            .then(function(pluginResults) {
+                return self.doPost("password", {});
+            })
             .then(function(data){
                 callPlugins("dataReady", {"data":data});
                 if (data["status"] == "error") {
