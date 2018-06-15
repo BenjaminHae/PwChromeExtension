@@ -27,7 +27,6 @@
             "background/backgroundListener.js",
             "background/hostCommunication.js",
             "ext/sha512.js",
-            "ext/password.js",
             "ext/aes.js",
             "ext/pbkdf2.js"
             ]
