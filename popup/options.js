@@ -2,7 +2,7 @@
 storage = chrome.storage.local;
 if ("sync" in chrome.storage)
     storage = chrome.storage.sync;
-versionRequired = [9,15];
+versionRequired = [10,0];
 
 function validateVersion(versionString){
     var version = versionString.split('.').map(function (x){return parseInt(x);});
