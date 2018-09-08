@@ -1,10 +1,13 @@
 var pwAddonHost = false;
 chrome.runtime.sendMessage({"request":"host"}, function(response) {
     pwAddonHost = document.location.href.startsWith(response["data"]["url"] + 'password.php');
-    if (pwAddonHost) {
-        getActions();
-    }
+    // send actions finished so "wrong" hosts still work
+    actionsFinished();
 });
+function actionsFinished() {
+    var evt = new CustomEvent("actionsReceived", null);
+    document.dispatchEvent(evt);
+}
 document.addEventListener('secretKeyReady', function(e) {
     //send secretKey to Addon
     getActions();
@@ -33,12 +36,6 @@ function executeScript(script, args) {
 
 function getActions() {
     chrome.runtime.sendMessage({"request":"actions"}, function(response) {
-        if (!pwAddonHost) {//check if this is really the right url before sending any confidential data
-            // return actions to still make other PWmanager instances work
-            var evt = new CustomEvent("actionsReceived", null);
-            document.dispatchEvent(evt);
-            return;
-        }
         var request = response;//JSON.parse(response);
         switch(request["request"]) {
             case "login":
@@ -78,8 +75,8 @@ function getActions() {
                 break;
             case "none": break;
         }
-        var evt = new CustomEvent("actionsReceived", null);
-        document.dispatchEvent(evt);
+        // send message that all actions are received and the page can be loaded
+        actionsFinished();
     });
 }
 
@@ -87,10 +84,10 @@ executeScript(function() {
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
         return;
     // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" instead
+    var actionsReceived = false;
     document.addEventListener('actionsReceived', function(e) {
         actionsReceived = true;
     });
-    var actionsReceived = false;
     window.encryptionWrapper = null;
     registerPlugin("preDataReady", function() {
         return new Promise((resolve, reject) => {
