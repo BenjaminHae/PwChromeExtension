@@ -84,6 +84,15 @@ function getLatestAction() {
 
 // listen to the injected code in content.js
 chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
+    // check for origin
+    if (sender["url"] != host + "password.php") {
+        if (myMessage["request"] == "actions") {
+            action = {"request": "none"};
+            sendResponse(action);
+        }
+        return;
+    }
+    
     //do something that only the extension has privileges here
     switch(myMessage["request"]){
         case "session": 

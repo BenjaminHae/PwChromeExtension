@@ -1,13 +1,10 @@
-var pwAddonHost = false;
-chrome.runtime.sendMessage({"request":"host"}, function(response) {
-    pwAddonHost = document.location.href.startsWith(response["data"]["url"] + 'password.php');
-    // send actions finished so "wrong" hosts still work
-    actionsFinished();
-});
 function actionsFinished() {
     var evt = new CustomEvent("actionsReceived", null);
     document.dispatchEvent(evt);
 }
+document.addEventListener('fetchFirstActions', function(e) {
+    getActions();
+});
 document.addEventListener('secretKeyReady', function(e) {
     //send secretKey to Addon
     getActions();
@@ -21,9 +18,7 @@ document.addEventListener('loggedOut', function(e) {
     });
 }, false);
 document.addEventListener('selectedAccount', function(e) {
-    if (pwAddonHost) {
-        chrome.runtime.sendMessage({"request": "selectAccount", "data": {"index": e.detail.index}}, function(response) { });
-    }
+    chrome.runtime.sendMessage({"request": "selectAccount", "data": {"index": e.detail.index}}, function(response) { });
 }, false);
 
 function executeScript(script, args) {
@@ -83,11 +78,12 @@ function getActions() {
 executeScript(function() {
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
         return;
-    // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" instead
+    // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" on plugin side
     var actionsReceived = false;
     document.addEventListener('actionsReceived', function(e) {
         actionsReceived = true;
     });
+    document.dispatchEvent(new CustomEvent("fetchFirstActions", { }));
     window.encryptionWrapper = null;
     registerPlugin("preDataReady", function() {
         return new Promise((resolve, reject) => {
