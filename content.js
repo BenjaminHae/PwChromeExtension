@@ -14,7 +14,7 @@ document.addEventListener('secretKeyReady', function(e) {
 
 document.addEventListener('loggedOut', function(e) {
     //log addon out
-    chrome.runtime.sendMessage({"request": "logout", "data": {"url": e.detail.url}}, function(response) {
+    chrome.runtime.sendMessage({"request": "logout", "data": {}}, function(response) {
     });
 }, false);
 document.addEventListener('selectedAccount', function(e) {
@@ -68,6 +68,12 @@ function getActions() {
                     $("#newiteminputurl").val(data["url"]);
                 }, {"url":request["data"]["url"]});
                 break;
+            case "wrongHost":
+                executeScript(function() {
+                    if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
+                        return;
+                    wrongHost = true;
+                }, {});
             case "none": break;
         }
         // send message that all actions are received and the page can be loaded
@@ -79,6 +85,7 @@ executeScript(function() {
     if (typeof(thisIsThePasswordManager) === 'undefined' || thisIsThePasswordManager === null || thisIsThePasswordManager != "d8180864-4596-43a0-9701-99840e5c4259")
         return;
     // We can't be sure this is "our" Password Manager here so the URL get's checked in every "action" on plugin side
+    var wrongHost = false;
     var actionsReceived = false;
     document.addEventListener('actionsReceived', function(e) {
         actionsReceived = true;
@@ -87,8 +94,9 @@ executeScript(function() {
     window.encryptionWrapper = null;
     registerPlugin("preDataReady", function() {
         return new Promise((resolve, reject) => {
-            if (actionsReceived) {
+            if (actionsReceived || wrongHost) {
                 resolve();
+                return;
             }
             var maxChecks = 100;
             const timeOutLength = 30;
@@ -110,6 +118,9 @@ executeScript(function() {
         });
     });
     registerPlugin("accountsReady", function() {
+        if (wrongHost) {
+            return Promise.resolve();
+        }
         backend.encryptionWrapper.getConfkey()
             .then(function(confkey) {
                 //getConfkey only get's called to explicitly set the confkey in encryptionWrapper._confkey,
@@ -118,20 +129,25 @@ executeScript(function() {
                     'detail': {
                         'encryptionWrapper': JSON.stringify(backend.encryptionWrapper),
                         'username': backend.user, 
-                        'sessionToken': backend.sessionToken,
-                        'url': window.location.href 
+                        'sessionToken': backend.sessionToken
                     }
                 });
                 document.dispatchEvent(evt);
             });
     });
     registerPlugin("preLogout", function() {
-        var evt = new CustomEvent("loggedOut", {'detail':{'url':window.location.href}});
+        if (wrongHost) {
+            return Promise.resolve();
+        }
+        var evt = new CustomEvent("loggedOut", {'detail':{}});
         document.dispatchEvent(evt);
     });
 
     // Add a symbol to select an account from the password manager in the addon
     registerPlugin("drawAccount", function(data) {
+        if (wrongHost) {
+            return Promise.resolve();
+        }
         var account = data["account"];
         var row = data["row"];
         row.find(".namecell .cellOptionButton:last").before($('<a>')
