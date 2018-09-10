@@ -90,13 +90,15 @@ function getLatestAction() {
 chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     // check for origin
     if (sender["id"] != chrome.runtime.id) {
+        console.log("wrong host");
         return;
     }
     else if (sender["url"].startsWith("chrome-extension://" + chrome.runtime.id + '/')){
     }
     else if (sender["url"] != host + "password.php") {
+        console.log("wrong host");
         if (myMessage["request"] == "actions") {
-            action = {"request": "none"};
+            let action = {"request": "wrongHost"};
             sendResponse(action);
         }
         return;
@@ -104,17 +106,9 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     //do something that only the extension has privileges here
     switch(myMessage["request"]){
         case "session": 
-            if (myMessage["data"]["url"].indexOf(host) != 0) {
-                console.log("wrong host");
-                return;
-            }
             receiveUserSession(myMessage["data"]); 
             break;
         case "logout":  
-            if (myMessage["data"]["url"].indexOf(host) != 0) {
-                console.log("wrong host");
-                return;
-            }
             cleanup(); 
             break;
         case "actions": var action = getLatestAction();
