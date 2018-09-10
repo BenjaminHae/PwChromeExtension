@@ -92,7 +92,9 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     if (sender["id"] != chrome.runtime.id) {
         return;
     }
-    if (sender["url"] != host + "password.php") {
+    else if (sender["url"].startsWith("chrome-extension://" + chrome.runtime.id + '/')){
+    }
+    else if (sender["url"] != host + "password.php") {
         if (myMessage["request"] == "actions") {
             action = {"request": "none"};
             sendResponse(action);
