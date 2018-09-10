@@ -15,9 +15,23 @@ class commonBackend {
     doPost(endpoint, data) {
         data = data || {};
         var endpointDomain = this.domain || "";
-        return $.post(endpointDomain + "rest/" + endpoint + ".php", data)
-            .then(function(msg) {
-                return commonBackend.checkResult(msg);
+        var body = new FormData();
+        for (let key in data) {
+            body.append(key, data[key]);
+        }
+        var request = new Request(endpointDomain + "rest/" + endpoint + ".php", {
+            method: 'post',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            body: body
+        });
+        return fetch(request)
+            .then(function(response) {
+                if (!response.ok || response.headers.get("Content-Type") != "application/json") {
+                    return Promise.reject(response);
+                }
+                return response.json()
+                    .then(commonBackend.checkApplicationResult);
             });
     }
     get sessionToken() {
@@ -26,7 +40,7 @@ class commonBackend {
         }
         return localStorage.session_token;
     }
-    static checkResult(msg) {
+    static checkApplicationResult(msg) {
         if(msg["status"] != "success") {
             throw(msg["message"]);
         }
@@ -76,8 +90,9 @@ let AuthenticatedSession = (superclass) => class extends superclass {
         //Todo raise event
         localStorage.clear();
         var promises = [];
-        if (getCookie('device') != "") {
-            promises.push(self.doPost("deletepin", {user:getCookie('username'), device:getCookie('device')}));
+        var device = getCookie('device');
+        if ((device != null) && (device != "")) {
+            promises.push(self.doPost("deletepin", {'user': getCookie('username'), 'device': device}));
         }
         return Promise.all(promises)
             .then(function(){
@@ -96,8 +111,14 @@ let Timeout = (superclass) => class extends superclass {
     }
     //Timout
     resetTimeout() {
+        if (!this.default_timeout) {
+            return;
+        }
         let newTimeout = this.default_timeout + Math.floor(Date.now() / 1000);
-        if (this.timeout < newTimeout) {
+        if (typeof this.timeout === 'undefined') {
+            this.timeout = newTimeout;
+        }
+        else if (this.timeout < newTimeout) {
             this.timeout = newTimeout;
         }
     }
@@ -166,8 +187,24 @@ let Accounts = (superclass) => class extends superclass {
             return Promise.reject("Account name can't be empty");
         }
         var account = this.accounts[id];
-        return account.setAccountName(name)
-            .then(function(){;
+        var oldData = { "name": account.accountName,
+                        "other": account.other};
+        var prepareOldDataPromise;
+        if (newpwd != "") {
+            //ToDo: Promise
+            var prepareOldDataPromise = account.getPassword()
+                .then(function(pwd) {
+                    oldData["password"] = pwd;
+                });
+        }
+        else {
+            var prepareOldDataPromise = Promise.resolve();
+        }
+        return prepareOldDataPromise
+            .then(function() {
+                return account.setAccountName(name)
+            })
+            .then(function() {
                 account.clearVisibleOther();
                 for (let x in other) {
                     account.setOther(x, other[x]);
@@ -178,11 +215,13 @@ let Accounts = (superclass) => class extends superclass {
                 }
                 return Promise.all(promises)
             })
-            .then(function(){
-                callPlugins("updateAccountPreSend", {"account":account, "name":name, "newPassword":newpwd, "other":other});
+            .then(function() {
+                return callPlugins("updateAccountPreSend", {"account":account, "name":name, "newPassword":newpwd, "other":other, "oldData": oldData});
+            })
+            .then(function() {
                 return account.getEncrypted();
             })
-            .then(function(encAccount){
+            .then(function(encAccount) {
                 return self.doPost("change", encAccount);
             });
     }
@@ -197,10 +236,12 @@ let PinHandling = (superclass) => class extends superclass {
     getDevice() {
         var self = this;
         var device = getCookie('device');
-        if (device <= 0)
-            device = "";
-        if (device != "")
-            return Promise.resolve(device);
+        if (device != null) {
+            if (device <= 0)
+                device = "";
+            if (device != "")
+                return Promise.resolve(device);
+        }
         device =  self.encryptionWrapper.generatePassphrase(9);
         // check if this key is already used
         return self.doPost("getpinpk", { user:self.user, device: device, sig:'1'})
@@ -236,12 +277,17 @@ let PinHandling = (superclass) => class extends superclass {
     }
     delPin() {
         var self = this;
-        if(getCookie('device') != "") {
-            return self.doPost("deletepin", {user:getCookie('username'), device:getCookie('device')})
+        var device = getCookie('device');
+        if((device != null) && (device != "")) {
+            return self.doPost("deletepin", {'user': getCookie('username'), 'device': device})
                 .then(function(msg){
                     self.delLocalPinStore();
                 });
         }
+    }
+    get pinActive() {
+        var device = getCookie('device');
+        return ((device != null) && (device != "")) && (this.usePin != 0);
     }
 }
 
@@ -351,7 +397,7 @@ class AccountBackend extends mix(commonBackend).with(EventHandler, Authenticated
             });
     }
     prepareFields(fields) {
-        this.fields = $.parseJSON(fields);
+        this.fields = JSON.parse(fields);
         for (let x in this.fields) {
             this.fields[x]["count"] = 0;
         }
@@ -376,29 +422,40 @@ class AccountBackend extends mix(commonBackend).with(EventHandler, Authenticated
     uploadFile(id, name, payload) {
         var self = this;
         var fkey = self.encryptionWrapper.generatePassphrase(Math.floor(Math.random() * 18) + 19);
-        var data = {
-            id:id, 
-            fkey:self.encryptionWrapper.encryptPassword(name, fkey),
-            data: EncryptionWrapper.encryptCharUsingKey(payload, fkey),
-            fname: self.encryptionWrapper.encryptChar(name)
-        };
-
-        return self.doPost('uploadfile', data);
+        let data = {"id": id};
+        return self.encryptionWrapper.encryptPassword(name, fkey)
+            .then(function(encryptedKey) {
+                data["fkey"] = encryptedKey;
+                return EncryptionWrapper.encryptCharUsingKey(payload, fkey);
+            })
+            .then(function(filedata) {
+                data["data"] = filedata;
+                return self.encryptionWrapper.encryptChar(name);
+            })
+            .then(function(fname) {
+                data["fname"] = fname;
+                return self.doPost('uploadfile', data);
+            });
     }
     downloadFile(id) {
         var self = this;
+        var filedata;
+        var file = {};
         return self.doPost('downloadfile', {id:id})
-            .then(function(filedata) {
-                var file = {};
+            .then(function(encfiledata) {
+                filedata = encfiledata;
                 file["name"] = self.accounts[id].file["name"];
-                var fkey = self.encryptionWrapper.decryptPassword(file["name"], filedata["key"]);
-                var data = EncryptionWrapper.decryptCharUsingKey(filedata["data"], fkey);
+                return self.encryptionWrapper.decryptPassword(file["name"], filedata["key"])
+            })
+            .then(function(fkey) {
+                return EncryptionWrapper.decryptCharUsingKey(filedata["data"], fkey);
+            })
+            .then(function(data) {
                 var typedata = data.substring(5, data.search(";"));
                 data = data.substring(data.search(",") + 1);
                 file["data"] = base64toBlob(data, typedata);
                 return file;
-            })
-        ;
+            });
     }
     
     changePassword(oldpass, newpass) {
@@ -621,8 +678,5 @@ class LogonBackend extends mix(commonBackend).with(EventHandler, PinHandling) {
     checkHostdomain() {
         var full = location.protocol + '//' + location.hostname;
         return this.hostdomain.toLowerCase().startsWith(full.toLowerCase());
-    }
-    get pinActive() {
-        return (getCookie('device') != "") && (this.usePin == 1);
     }
 }
