@@ -17,7 +17,6 @@
     "content_scripts":[{"matches":["*://*/*"], "js":["content.js"], "run_at":"document_end", "all_frames": true}],
     "background": {
         "scripts": [
-            "ext/jquery.min.js",
             "ext/commonFunctions.js",
             "ext/cryptoWrapper.js",
             "ext/account.js",
