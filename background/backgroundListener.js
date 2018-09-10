@@ -9,6 +9,10 @@ chrome.browserAction.setIcon({ path: "iconLoggedOut.png" });
 // listen to popup.js
 chrome.runtime.onConnect.addListener(function(port) {
     console.log(port.name + " connected .....");
+    // check origin
+    if (port["sender"]["id"] != chrome.runtime.id) {
+        return;
+    }
     port.onMessage.addListener(function(msg) {
         var request = JSON.parse(msg);
         function sendPopupRequest(request, data) {
@@ -85,6 +89,9 @@ function getLatestAction() {
 // listen to the injected code in content.js
 chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
     // check for origin
+    if (sender["id"] != chrome.runtime.id) {
+        return;
+    }
     if (sender["url"] != host + "password.php") {
         if (myMessage["request"] == "actions") {
             action = {"request": "none"};
@@ -92,7 +99,6 @@ chrome.runtime.onMessage.addListener(function(myMessage, sender, sendResponse){
         }
         return;
     }
-    
     //do something that only the extension has privileges here
     switch(myMessage["request"]){
         case "session": 
