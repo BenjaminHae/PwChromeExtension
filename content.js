@@ -94,7 +94,7 @@ executeScript(function() {
     window.encryptionWrapper = null;
     registerPlugin("preDataReady", function() {
         return new Promise((resolve, reject) => {
-            if (actionsReceived || wrongHost) {
+            if (actionsReceived || window.wrongHost) {
                 resolve();
                 return;
             }
@@ -118,7 +118,7 @@ executeScript(function() {
         });
     });
     registerPlugin("accountsReady", function() {
-        if (wrongHost) {
+        if (window.wrongHost) {
             return Promise.resolve();
         }
         backend.encryptionWrapper.getConfkey()
@@ -136,7 +136,7 @@ executeScript(function() {
             });
     });
     registerPlugin("preLogout", function() {
-        if (wrongHost) {
+        if (window.wrongHost) {
             return Promise.resolve();
         }
         var evt = new CustomEvent("loggedOut", {'detail':{}});
@@ -145,7 +145,7 @@ executeScript(function() {
 
     // Add a symbol to select an account from the password manager in the addon
     registerPlugin("drawAccount", function(data) {
-        if (wrongHost) {
+        if (window.wrongHost) {
             return Promise.resolve();
         }
         var account = data["account"];
