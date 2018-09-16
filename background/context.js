@@ -67,17 +67,22 @@ function InsertUsernameAndPasswordAndSignin(url, frameId = 0){
                     var input = document.activeElement;
                     input.value = args["user"];
                     input.dispatchEvent(new Event('change'));
-                    form = input.closest("form");
-                    passwd = form.querySelectorAll("input[type=password]")[0];
+                    let form = input.closest("form");
+                    let passwd = form.querySelectorAll("input[type=password]")[0];
                     passwd.value = args["passwd"];
                     passwd.dispatchEvent(new Event('change'));
+                }, { 'user': account["other"]["user"], 'passwd': password}, frameId);
+                return new Promise(resolve => setTimeout(resolve, 250));
+            })
+            .then(function() {
+                executeScript(function(args) {
+                    var form = document.activeElement.closest("form");
 
                     //Hack to prevent issues with forms containing <input name="submit"
                     //See https://stackoverflow.com/a/41846503/3592375
                     var submitFormFunction = Object.getPrototypeOf(form).submit;
                     submitFormFunction.call(form);
-
-                }, { 'user': account["other"]["user"], 'passwd': password}, frameId);
+                }, {});
             });
     }
     else {
