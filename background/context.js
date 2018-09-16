@@ -76,12 +76,17 @@ function InsertUsernameAndPasswordAndSignin(url, frameId = 0){
             })
             .then(function() {
                 executeScript(function(args) {
-                    var form = document.activeElement.closest("form");
-
-                    //Hack to prevent issues with forms containing <input name="submit"
-                    //See https://stackoverflow.com/a/41846503/3592375
-                    var submitFormFunction = Object.getPrototypeOf(form).submit;
-                    submitFormFunction.call(form);
+                    let form = document.activeElement.closest("form");
+                    let buttons = form.querySelectorAll("[type=submit]");
+                    if (buttons.length > 0) {
+                        buttons[0].click();
+                    }
+                    else {
+                        //Hack to prevent issues with forms containing <input name="submit"
+                        //See https://stackoverflow.com/a/41846503/3592375
+                        let submitFormFunction = Object.getPrototypeOf(form).submit;
+                        submitFormFunction.call(form);
+                    }
                 }, {});
             });
     }
