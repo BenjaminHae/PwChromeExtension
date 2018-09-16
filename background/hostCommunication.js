@@ -109,6 +109,9 @@ function getAccountsForDomain(domain) {
     var markedActive = false;
     var bestFitIndex = -1;
     var bestFitLength = 0;
+    if (!backend || !backend.accounts) {
+        return [];
+    }
     for (var item in backend.accounts) {
         var account = backend.accounts[item];
         var url = account["other"]["url"];
