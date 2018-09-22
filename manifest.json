@@ -7,7 +7,7 @@
                "32": "icons/icon32.png",
                "48": "icons/icon48.png",
               "128": "icons/icon128_alpha.png"},
-    "version": "0.3.13",
+    "version": "0.3.14",
 
     "browser_action": {
         "default_icon": "iconLoggedOut.png",
