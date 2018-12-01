@@ -122,25 +122,23 @@ let Timeout = (superclass) => class extends superclass {
             this.timeout = newTimeout;
         }
     }
-    countdown() {
+    clientCountdown() {
         if (this.isTimeout) {
             this.logout("Logged out due to inactivity");
             this.clearTimeout();
         }
     }
-    sessionCountdown() {
-        var ck = getCookie("ServerRenew");
-        if(ck == '1') // Reset timer
-            this.server_timeout  = this.default_server_timeout+Math.floor(Date.now() / 1000);
-        if(ck == "-1" || this.server_timeout < Math.floor(Date.now() / 1000)) { // Timer has expired
-            this.logout("Session timed out");
-            this.clearTimeout();
-        }
-        setCookie("ServerRenew", '0');// nothing happened
+    checkSession() {
+        var self = this;
+        this.doPost('sessionAlive')
+            .catch(function() {
+                self.logout("Session timed out");
+                self.clearTimeout();
+            });
     }
     initTimeout() {
-        this.countdownInterval = setInterval(this.countdown.bind(this), 5000);
-        this.sessionCountdownInterval = setInterval(this.sessionCountdown.bind(this), 5000);
+        this.countdownInterval = setInterval(this.clientCountdown.bind(this), 5000);
+        this.sessionCountdownInterval = setInterval(this.checkSession.bind(this), 5000);
     }
     clearTimeout() {
         clearInterval(this.sessionCountdownInterval);
@@ -160,10 +158,15 @@ let Timeout = (superclass) => class extends superclass {
 
 //mixin for accounts
 let Accounts = (superclass) => class extends superclass {
+    // create account with name, pwd and other
+    // if pwd is empty a random password is generated
     addAccount(name, pwd, other) {
         var self = this;
         if (name == "") {
             return Promise.reject("Account name can't be empty");
+        }
+        if (pwd == "") {
+            pwd = this.encryptionWrapper.generatePassphrase(this.default_length);
         }
         let account = new Account(null, name, "");
         return account.setEncryptionWrapper(self.encryptionWrapper)
@@ -192,13 +195,13 @@ let Accounts = (superclass) => class extends superclass {
         var prepareOldDataPromise;
         if (newpwd != "") {
             //ToDo: Promise
-            var prepareOldDataPromise = account.getPassword()
+            prepareOldDataPromise = account.getPassword()
                 .then(function(pwd) {
                     oldData["password"] = pwd;
                 });
         }
         else {
-            var prepareOldDataPromise = Promise.resolve();
+            prepareOldDataPromise = Promise.resolve();
         }
         return prepareOldDataPromise
             .then(function() {

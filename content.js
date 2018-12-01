@@ -43,7 +43,7 @@ function getActions() {
                     var cryptoData = JSON.parse(data["encryptionWrapper"]);
                     window.encryptionWrapper = new EncryptionWrapper(cryptoData["secretkey"], cryptoData["jsSalt"], cryptoData["pwSalt"], cryptoData["alphabet"]);
                     window.encryptionWrapper._confkey = cryptoData["_confkey"];
-                    EncryptionWrapper.persistCredentials("", cryptoData["secretkey"], cryptoData["_confkey"], cryptoData["pwSalt"]);
+                    //EncryptionWrapper.persistCredentials("", cryptoData["secretkey"], cryptoData["_confkey"], cryptoData["pwSalt"]);
                     //actionsReceived = true;
                 }, {'encryptionWrapper': request["data"]["encryptionWrapper"]});
                 break;
