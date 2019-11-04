@@ -103,6 +103,11 @@ function showAvailableAccounts(accounts,url) {
     var ul = document.getElementById('accounts-list');
     var editIcon = document.createElement("span");
     editIcon.setAttribute("class", "pull-right glyphicon glyphicon-pencil");
+    var copyIcon = null;
+    if (navigator.clipboard) {
+        var copyIcon = document.createElement("span");
+        copyIcon.setAttribute("class", "pull-right glyphicon glyphicon-copy");
+    }
     while (ul.firstChild) {
         ul.removeChild(ul.firstChild);
     }
@@ -129,6 +134,14 @@ function showAvailableAccounts(accounts,url) {
             e.stopPropagation();
         }
         a.prepend(editIconHere);
+        if (copyIcon) {
+            copyIconHere = copyIcon.cloneNode(true);
+            copyIconHere.index = account["index"];
+            copyIconHere.onclick = function(e){
+                sendBackgroundRequest("copyPassword", {"index":this.index});
+            }
+            a.prepend(copyIconHere);
+        }
         ul.appendChild(a);
     }
     if (accounts.length == 0){

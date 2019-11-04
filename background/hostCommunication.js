@@ -94,6 +94,18 @@ function getPassword(account) {
     return account.getPassword();
 }
 
+function getAccountByIndex(index) {
+    if (!backend || !backend.accounts) {
+        return null;
+    }
+    for (var item in backend.accounts) {
+        var account = backend.accounts[item];
+        if (account["index"] == index)
+            return account;
+    }
+    return null;
+}
+
 function getAccountForDomain(domain) {
     var applicableAccounts = getAccountsForDomain(domain);
     for (var item in applicableAccounts) {
