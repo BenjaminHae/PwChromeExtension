@@ -11,6 +11,7 @@ port.onMessage.addListener(function(msg) {
         case "LoggedIn": showLoggedIn(request["data"]); break;
         case "AvailableAccounts": showAvailableAccounts(request["data"]["accounts"],request["data"]["url"]); break;
         case "Host": host = request["data"]["url"]; break;
+        case "CopyToClipboard": navigator.clipboard.writeText(request["data"]["text"]); break;
     }
     
 });
@@ -139,6 +140,7 @@ function showAvailableAccounts(accounts,url) {
             copyIconHere.index = account["index"];
             copyIconHere.onclick = function(e){
                 sendBackgroundRequest("copyPassword", {"index":this.index});
+                e.stopPropagation();
             }
             a.prepend(copyIconHere);
         }

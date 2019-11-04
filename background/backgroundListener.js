@@ -50,10 +50,10 @@ chrome.runtime.onConnect.addListener(function(port) {
                 break;
             case "copyPassword":
                 //ToDo
-                let account = getAccountByIndex(request["data"]["index"]);
+                var account = getAccountByIndex(request["data"]["index"]);
                 getPassword(account)
                     .then((password) => {
-                        navigator.clipboard.writeText(password);
+                        sendPopupRequest('CopyToClipboard', {'text': password}); 
                     });
                 break;
         }
